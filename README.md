@@ -24,9 +24,10 @@ PYTHONPATH=. python3 experiment/run_experiment.py  --experiment-config $EXPERIME
 
 
 ## Links
-
+AFPLUSPLUS_FORK: https://github.com/mattweingarten/AFLplusplus
 Fuzzbench: https://google.github.io/fuzzbench/
 LLVM flags: https://llvm.org/docs/Passes.html#id97
+CLANG code coverage: https://clang.llvm.org/docs/SourceBasedCodeCoverage.html#id7 
 
 ## Notes
 
