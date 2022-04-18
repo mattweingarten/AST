@@ -19,5 +19,17 @@ source .venv/bin/activate
 ```
 
 ```
-PYTHONPATH=. python3 experiment/run_experiment.py python3 experiment/run_experiment.py --experiment-config experiment-config.yaml --benchmarks freetype2-2017 bloaty_fuzz_target --experiment-name $EXPERIMENT_NAME --fuzzers afl libfuzzer
+PYTHONPATH=. python3 experiment/run_experiment.py  --experiment-config $EXPERIMENT_CONFIG_FILE --benchmarks freetype2-2017 bloaty_fuzz_target --experiment-name $EXPERIMENT_NAME --fuzzers afl libfuzzer
+```
+
+
+## Links
+
+Fuzzbench: https://google.github.io/fuzzbench/
+LLVM flags: https://llvm.org/docs/Passes.html#id97
+
+## Notes
+
+```
+PYTHONPATH=. python3 experiment/run_experiment.py --experiment-config ../AST/experiment.yaml --benchmarks freetype2-2017 bloaty_fuzz_target --experiment-name test_run  --fuzzers aflo0 aflo1 aflo2 aflo3  
 ```
