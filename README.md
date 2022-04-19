@@ -30,6 +30,9 @@ Fuzzbench: https://google.github.io/fuzzbench/ <br />
 LLVM flags: https://llvm.org/docs/Passes.html#id97 <br />
 CLANG code coverage: https://clang.llvm.org/docs/SourceBasedCodeCoverage.html#id7 <br />
 
+## Other Resources
+- afl++ with modified command line args: https://github.com/abertschi/AFLplusplus/tree/ast/ast
+  - pass clang args with AST_CC_ARGS="-O0" AFL_DONT_OPTIMIZE=1 ${CC} .
 
 ## Notes
 
