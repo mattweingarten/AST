@@ -19,7 +19,7 @@ source .venv/bin/activate
 ```
 
 ```
-PYTHONPATH=. python3 experiment/run_experiment.py  --experiment-config $EXPERIMENT_CONFIG_FILE --benchmarks freetype2-2017 bloaty_fuzz_target --experiment-name $EXPERIMENT_NAME --fuzzers afl libfuzzer
+PYTHONPATH=. python3 experiment/run_experiment.py  --experiment-config $EXPERIMENT_CONFIG_FILE --benchmarks freetype2-2017 bloaty_fuzz_target --experiment-name $EXPERIMENT_NAME --fuzzers afl libfuzzer 
 ```
 
 
@@ -34,5 +34,11 @@ CLANG code coverage: https://clang.llvm.org/docs/SourceBasedCodeCoverage.html#id
 ## Notes
 
 ```
-PYTHONPATH=. python3 experiment/run_experiment.py --experiment-config ../AST/experiment.yaml --benchmarks freetype2-2017 bloaty_fuzz_target --experiment-name test_run  --fuzzers aflo0 aflo1 aflo2 aflo3  
+PYTHONPATH=. python3 experiment/run_experiment.py --experiment-config ../AST/experiment-config.yaml  --experiment-name run14  --fuzzers aflo0 aflo1 aflo2 aflo3  
+```
+
+### Docker cleanup
+```
+alias docker-cleanup='docker ps -a -q | xargs -I {} docker rm {} ; docker images -q -f dangling=true | xargs -I {} docker rmi -f {}; docker volume ls -qf dangling=true | xargs -I {} docker volume rm {}'
+
 ```
