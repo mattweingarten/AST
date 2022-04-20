@@ -11,4 +11,4 @@ PYTHONPATH=$FUZZBENCH_HOME python3 $FUZZBENCH_HOME/experiment/run_experiment.py 
     --experiment-config $SCRIPT_DIR/experiment-config.bean.yaml  \
     --experiment-name "$name"  \
     --benchmarks freetype2-2017 \
-    --fuzzers aflo0
+    --fuzzers aflo0 aflo1 aflo2 aflo3

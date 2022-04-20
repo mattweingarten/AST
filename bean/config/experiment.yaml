@@ -3,10 +3,13 @@ benchmarks:
 concurrent_builds: null
 description: null
 docker_registry: gcr.io/fuzzbench
-experiment: exp-2022-04-19-22-48-43
+experiment: exp-2022-04-20-01-10-57
 experiment_filestore: /home/b/tmp/ast-fuzz/experiment-data
 fuzzers:
 - aflo0
+- aflo1
+- aflo2
+- aflo3
 git_hash: 813457d2d6c0ab52f042654e03272bc74cf51ef3
 local_experiment: true
 max_total_time: 5400
