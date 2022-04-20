@@ -1,9 +1,9 @@
 benchmarks:
-- freetype2-2017
+- curl_curl_fuzzer_http
 concurrent_builds: null
 description: null
 docker_registry: gcr.io/fuzzbench
-experiment: exp-2022-04-20-01-10-57
+experiment: exp-2022-04-20-17-31-50
 experiment_filestore: /home/b/tmp/ast-fuzz/experiment-data
 fuzzers:
 - aflo0
