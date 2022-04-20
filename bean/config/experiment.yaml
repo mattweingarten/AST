@@ -1,16 +1,16 @@
 benchmarks:
-- curl_curl_fuzzer_http
+- freetype2-2017
 concurrent_builds: null
 description: null
 docker_registry: gcr.io/fuzzbench
-experiment: exp-2022-04-20-17-31-50
+experiment: exp-2022-04-20-21-20-37
 experiment_filestore: /home/b/tmp/ast-fuzz/experiment-data
 fuzzers:
 - aflo0
 - aflo1
 - aflo2
 - aflo3
-git_hash: 813457d2d6c0ab52f042654e03272bc74cf51ef3
+git_hash: 090fbfe23e3cc0e51b899612bd220f47699872db
 local_experiment: true
 max_total_time: 5400
 measurers_cpus: null
