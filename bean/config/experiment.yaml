@@ -3,16 +3,16 @@ benchmarks:
 concurrent_builds: null
 description: null
 docker_registry: gcr.io/fuzzbench
-experiment: exp-2022-04-20-22-25-14
+experiment: exp-2022-04-21-19-43-39
 experiment_filestore: /home/b/tmp/ast-fuzz/experiment-data
 fuzzers:
-- aflo0
-- aflo1
-- aflo2
-- aflo3
-git_hash: ccfb4a0f03b7b41fcd876bfc16ab952586bb7752
+- aflplusplus_ast_o0
+- aflplusplus_ast_o1
+- aflplusplus_ast_o2
+- aflplusplus_ast_o3
+git_hash: 23b47148183fae6cbfcdf65c698dffe01fe3d532
 local_experiment: true
-max_total_time: 5400
+max_total_time: 3600
 measurers_cpus: null
 no_dictionaries: false
 no_seeds: false
