@@ -1,0 +1,408 @@
+#+title: Notes, AST Project
+
+* 2021 FuzzBench-An-Open-Fuzzer-Benchmarking-Platform-and-Service
+:properties:
+:file:./2021-FuzzBench-An-Open-Fuzzer-Benchmarking-Platform-and-Service.pdf
+:end:
+
+** Clang Source based Coverage
+- Use *Clang's source based coverage*
+  - Why? Not biased towards a particular fuzzer, same coverage tool across all fuzzers
+
+
+* Fuzzbench Configs
+** Options to AFL++
+#+begin_quote
+build_modes = ['tracepc', 'cmplog', 'dict2file']
+
+tracepc:
+- os.environ['AFL_LLVM_USE_TRACE_PC'] = '1'
+  https://stackoverflow.com/questions/68861524/what-is-the-difference-between-fsanitize-coverage-trace-pc-and-trace-pc-guard
+
+
+cmplog has no effect:
+- if 'cmplog' in build_modes and 'qemu' not in build_modes:
+- qemu is not set
+
+dict2file:
+- os.environ['AFL_LLVM_DICT2FILE'] = build_directory + '/afl++.dict'
+- instructs afl to generate dict file
+#+end_quote
+
+** Debug Build
+#+begin_src
+make debug-builder-aflo3-freetype2-2017
+fuzzer_build
+#+end_src
+
+** TODO Issue:
+*** TODO flags contain o3 -> Does this ignore afl modified code for flags?
+*** TODO afl-clang-fast is used? Dont we want afl-clang-lto?
+  - LOT: afl-clang-lto - collision free instrumentation at link time, https://github.com/AFLplusplus/AFLplusplus/blob/stable/instrumentation/README.lto.md
+  - Unclear whether performs better than afl++ fast
+
+
+** Aflo0
+#+begin_src
+AFL++ build:
+['tracepc', 'cmplog', 'dict2file']
+
+Building benchmark freetype2-2017 with fuzzer aflo0
+build_script /src/build.sh
+PYTHONPATH /src
+JVM_LD_LIBRARY_PATH /usr/lib/jvm/java-15-openjdk-amd64/lib/server
+HOSTNAME d7b5a970a7c1
+CXXFLAGS_EXTRA -stdlib=libc++
+DFSAN_OPTIONS warn_unimplemented=0
+SANITIZER address
+TERM xterm
+UBSAN_OPTIONS silence_unsigned_overflow=1
+OUT /out
+SANITIZER_FLAGS_address -fsanitize=address -fsanitize-address-use-after-scope
+CCC clang++
+COVERAGE_FLAGS -fsanitize=fuzzer-no-link
+FUZZING_ENGINE libfuzzer
+ASAN_OPTIONS detect_leaks=0
+
+CXXFLAGS -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -stdlib=libc++ -O3
+PYTHON_VERSION 3.8.3
+PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/out:/root/.go/bin:/root/go/bin:/rust/bin:/usr/lib/jvm/java-15-openjdk-amd64/bin
+CARGO_HOME /rust
+OSSFUZZ_RUSTPATH /rust
+BAZELISK_VERSION 1.9.0
+FUZZER_LDFLAGS
+_ /usr/local/bin/python3
+FUZZ_OUTSIDE_EXPERIMENT 1
+WORK /work
+SANITIZER_FLAGS_undefined -fsanitize=array-bounds,bool,builtin,enum,float-divide-by-zero,function,integer-divide-by-zero,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,unsigned-integer-overflow,unreachable,vla-bound,vptr -fno-sanitize-recover=array-bounds,bool,builtin,enum,float-divide-by-zero,function,integer-divide-by-zero,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,unreachable,vla-bound,vptr
+
+PWD /src
+FUZZER aflo0
+SRC /src
+JAVA_HOME /usr/lib/jvm/java-15-openjdk-amd64
+LIB_FUZZING_ENGINE /libAFLDriver.a
+JAZZER_API_PATH /usr/local/lib/jazzer_api_deploy.jar
+TRIAL_ID 1
+CMAKE_VERSION 3.21.1
+
+CXX /afl/afl-clang-fast++
+SANITIZER_FLAGS_dataflow -fsanitize=dataflow
+
+HOME /root
+SHLVL 2
+COVERAGE_FLAGS_coverage -fprofile-instr-generate -fcoverage-mapping -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument
+
+CFLAGS -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -O3
+
+RUSTUP_HOME /rust/rustup
+SANITIZER_FLAGS_coverage
+SANITIZER_FLAGS_thread -fsanitize=thread
+FORCE_LOCAL 1
+BENCHMARK freetype2-2017
+FUZZ_TARGET ftfuzzer
+COVERAGE_FLAGS_dataflow -fsanitize-coverage=trace-pc-guard,pc-table,bb,trace-cmp
+DEBIAN_FRONTEND noninteractive
+LIB_FUZZING_ENGINE_DEPRECATED /usr/lib/libFuzzingEngine.a
+GOPATH /root/go
+LESSOPEN | /usr/bin/lesspipe %s
+ARCHITECTURE x86_64
+
+CC /afl/afl-clang-fast
+SANITIZER_FLAGS_memory -fsanitize=memory -fsanitize-memory-track-origins
+LESSCLOSE /usr/bin/lesspipe %s %s
+LC_CTYPE C.UTF-8
+
+AFL_LLVM_USE_TRACE_PC 1
+AFL_LLVM_DICT2FILE /out/afl++.dict
+FUZZER_LIB /libAFLDriver.a
+AFL_QUIET 1
+AFL_MAP_SIZE 2621440
+
+#+end_src
+
+** Aflo1
+#+begin_src
+AFL++ build:
+['tracepc', 'cmplog', 'dict2file']
+
+Building benchmark freetype2-2017 with fuzzer aflo1
+build_script /src/build.sh
+
+PYTHONPATH /src
+JVM_LD_LIBRARY_PATH /usr/lib/jvm/java-15-openjdk-amd64/lib/server
+HOSTNAME a332e0f4c4fd
+CXXFLAGS_EXTRA -stdlib=libc++
+DFSAN_OPTIONS warn_unimplemented=0
+SANITIZER address
+TERM xterm
+UBSAN_OPTIONS silence_unsigned_overflow=1
+OUT /out
+SANITIZER_FLAGS_address -fsanitize=address -fsanitize-address-use-after-scope
+CCC clang++
+COVERAGE_FLAGS -fsanitize=fuzzer-no-link
+FUZZING_ENGINE libfuzzer
+ASAN_OPTIONS detect_leaks=0
+
+CXXFLAGS -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -stdlib=libc++ -O3
+
+PYTHON_VERSION 3.8.3
+
+PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/out:/root/.go/bin:/root/go/bin:/rust/bin:/usr/lib/jvm/java-15-openjdk-amd64/bin
+CARGO_HOME /rust
+OSSFUZZ_RUSTPATH /rust
+BAZELISK_VERSION 1.9.0
+FUZZER_LDFLAGS
+_ /usr/local/bin/python3
+FUZZ_OUTSIDE_EXPERIMENT 1
+WORK /work
+
+SANITIZER_FLAGS_undefined -fsanitize=array-bounds,bool,builtin,enum,float-divide-by-zero,function,integer-divide-by-zero,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,unsigned-integer-overflow,unreachable,vla-bound,vptr -fno-sanitize-recover=array-bounds,bool,builtin,enum,float-divide-by-zero,function,integer-divide-by-zero,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,unreachable,vla-bound,vptr
+
+PWD /src
+FUZZER aflo1
+SRC /src
+JAVA_HOME /usr/lib/jvm/java-15-openjdk-amd64
+LIB_FUZZING_ENGINE /libAFLDriver.a
+JAZZER_API_PATH /usr/local/lib/jazzer_api_deploy.jar
+TRIAL_ID 1
+CMAKE_VERSION 3.21.1
+CXX /afl/afl-clang-fast++
+SANITIZER_FLAGS_dataflow -fsanitize=dataflow
+HOME /root
+SHLVL 2
+
+COVERAGE_FLAGS_coverage -fprofile-instr-generate -fcoverage-mapping -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument
+
+CFLAGS -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -O3
+
+
+RUSTUP_HOME /rust/rustup
+SANITIZER_FLAGS_coverage
+SANITIZER_FLAGS_thread -fsanitize=thread
+FORCE_LOCAL 1
+BENCHMARK freetype2-2017
+FUZZ_TARGET ftfuzzer
+COVERAGE_FLAGS_dataflow -fsanitize-coverage=trace-pc-guard,pc-table,bb,trace-cmp
+DEBIAN_FRONTEND noninteractive
+LIB_FUZZING_ENGINE_DEPRECATED /usr/lib/libFuzzingEngine.a
+GOPATH /root/go
+LESSOPEN | /usr/bin/lesspipe %s
+ARCHITECTURE x86_64
+CC /afl/afl-clang-fast
+SANITIZER_FLAGS_memory -fsanitize=memory -fsanitize-memory-track-origins
+LESSCLOSE /usr/bin/lesspipe %s %s
+LC_CTYPE C.UTF-8
+
+
+AFL_LLVM_USE_TRACE_PC 1
+AFL_LLVM_DICT2FILE /out/afl++.dict
+FUZZER_LIB /libAFLDriver.a
+AFL_QUIET 1
+AFL_MAP_SIZE 2621440
+
+
+#+end_src
+** Aflo2
+#+begin_src
+AFL++ build:
+['tracepc', 'cmplog', 'dict2file']
+
+Building benchmark freetype2-2017 with fuzzer aflo2
+build_script /src/build.sh
+PYTHONPATH /src
+JVM_LD_LIBRARY_PATH /usr/lib/jvm/java-15-openjdk-amd64/lib/server
+HOSTNAME b7d374fb7499
+CXXFLAGS_EXTRA -stdlib=libc++
+DFSAN_OPTIONS warn_unimplemented=0
+SANITIZER address
+TERM xterm
+UBSAN_OPTIONS silence_unsigned_overflow=1
+OUT /out
+SANITIZER_FLAGS_address -fsanitize=address -fsanitize-address-use-after-scope
+CCC clang++
+COVERAGE_FLAGS -fsanitize=fuzzer-no-link
+FUZZING_ENGINE libfuzzer
+ASAN_OPTIONS detect_leaks=0
+
+DEBUG_BUILDER 1
+CXXFLAGS -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -stdlib=libc++ -O3
+
+PYTHON_VERSION 3.8.3
+
+PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/out:/root/.go/bin:/root/go/bin:/rust/bin:/usr/lib/jvm/java-15-openjdk-amd64/bin
+CARGO_HOME /rust
+OSSFUZZ_RUSTPATH /rust
+BAZELISK_VERSION 1.9.0
+FUZZER_LDFLAGS
+_ /usr/local/bin/python3
+FUZZ_OUTSIDE_EXPERIMENT 1
+WORK /work
+SANITIZER_FLAGS_undefined -fsanitize=array-bounds,bool,builtin,enum,float-divide-by-zero,function,integer-divide-by-zero,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,unsigned-integer-overflow,unreachable,vla-bound,vptr -fno-sanitize-recover=array-bounds,bool,builtin,enum,float-divide-by-zero,function,integer-divide-by-zero,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,unreachable,vla-bound,vptr
+PWD /src
+FUZZER aflo2
+SRC /src
+
+JAVA_HOME /usr/lib/jvm/java-15-openjdk-amd64
+LIB_FUZZING_ENGINE /libAFLDriver.a
+JAZZER_API_PATH /usr/local/lib/jazzer_api_deploy.jar
+TRIAL_ID 1
+CMAKE_VERSION 3.21.1
+CXX /afl/afl-clang-fast++
+SANITIZER_FLAGS_dataflow -fsanitize=dataflow
+HOME /root
+SHLVL 2
+COVERAGE_FLAGS_coverage -fprofile-instr-generate -fcoverage-mapping -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument
+CFLAGS -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -O3
+RUSTUP_HOME /rust/rustup
+SANITIZER_FLAGS_coverage
+SANITIZER_FLAGS_thread -fsanitize=thread
+BENCHMARK freetype2-2017
+FUZZ_TARGET ftfuzzer
+FORCE_LOCAL 1
+COVERAGE_FLAGS_dataflow -fsanitize-coverage=trace-pc-guard,pc-table,bb,trace-cmp
+DEBIAN_FRONTEND noninteractive
+LIB_FUZZING_ENGINE_DEPRECATED /usr/lib/libFuzzingEngine.a
+GOPATH /root/go
+LESSOPEN | /usr/bin/lesspipe %s
+ARCHITECTURE x86_64
+CC /afl/afl-clang-fast
+SANITIZER_FLAGS_memory -fsanitize=memory -fsanitize-memory-track-origins
+LESSCLOSE /usr/bin/lesspipe %s %s
+LC_CTYPE C.UTF-8
+
+AFL_LLVM_USE_TRACE_PC 1
+AFL_LLVM_DICT2FILE /out/afl++.dict
+FUZZER_LIB /libAFLDriver.a
+
+AFL_QUIET 1
+AFL_MAP_SIZE 2621440
+
+#+end_src
+** Aflo3
+#+begin_src
+AFL++ build:
+['tracepc', 'cmplog', 'dict2file']
+Building benchmark freetype2-2017 with fuzzer aflo3
+build_script /src/build.sh
+PYTHONPATH /src
+JVM_LD_LIBRARY_PATH /usr/lib/jvm/java-15-openjdk-amd64/lib/server
+HOSTNAME a34c96e96aa7
+CXXFLAGS_EXTRA -stdlib=libc++
+DFSAN_OPTIONS warn_unimplemented=0
+SANITIZER address
+TERM xterm
+UBSAN_OPTIONS silence_unsigned_overflow=1
+OUT /out
+SANITIZER_FLAGS_address -fsanitize=address -fsanitize-address-use-after-scope
+CCC clang++
+COVERAGE_FLAGS -fsanitize=fuzzer-no-link
+FUZZING_ENGINE libfuzzer
+ASAN_OPTIONS detect_leaks=0
+
+DEBUG_BUILDER 1
+CXXFLAGS -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -stdlib=libc++ -O3
+PYTHON_VERSION 3.8.3
+PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/out:/root/.go/bin:/root/go/bin:/rust/bin:/usr/lib/jvm/java-15-openjdk-amd64/bin
+CARGO_HOME /rust
+OSSFUZZ_RUSTPATH /rust
+BAZELISK_VERSION 1.9.0
+FUZZER_LDFLAGS
+_ /usr/local/bin/python3
+FUZZ_OUTSIDE_EXPERIMENT 1
+WORK /work
+SANITIZER_FLAGS_undefined -fsanitize=array-bounds,bool,builtin,enum,float-divide-by-zero,function,integer-divide-by-zero,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,unsigned-integer-overflow,unreachable,vla-bound,vptr -fno-sanitize-recover=array-bounds,bool,builtin,enum,float-divide-by-zero,function,integer-divide-by-zero,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,unreachable,vla-bound,vptr
+PWD /src
+FUZZER aflo3
+SRC /src
+JAVA_HOME /usr/lib/jvm/java-15-openjdk-amd64
+LIB_FUZZING_ENGINE /libAFLDriver.a
+JAZZER_API_PATH /usr/local/lib/jazzer_api_deploy.jar
+TRIAL_ID 1
+CMAKE_VERSION 3.21.1
+CXX /afl/afl-clang-fast++
+SANITIZER_FLAGS_dataflow -fsanitize=dataflow
+HOME /root
+SHLVL 2
+COVERAGE_FLAGS_coverage -fprofile-instr-generate -fcoverage-mapping -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument
+
+CFLAGS -DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION -pthread -Wl,--no-as-needed -Wl,-ldl -Wl,-lm -Wno-unused-command-line-argument -O3
+
+RUSTUP_HOME /rust/rustup
+SANITIZER_FLAGS_coverage
+SANITIZER_FLAGS_thread -fsanitize=thread
+BENCHMARK freetype2-2017
+FUZZ_TARGET ftfuzzer
+FORCE_LOCAL 1
+COVERAGE_FLAGS_dataflow -fsanitize-coverage=trace-pc-guard,pc-table,bb,trace-cmp
+DEBIAN_FRONTEND noninteractive
+LIB_FUZZING_ENGINE_DEPRECATED /usr/lib/libFuzzingEngine.a
+GOPATH /root/go
+LESSOPEN | /usr/bin/lesspipe %s
+ARCHITECTURE x86_64
+CC /afl/afl-clang-fast
+SANITIZER_FLAGS_memory -fsanitize=memory -fsanitize-memory-track-origins
+LESSCLOSE /usr/bin/lesspipe %s %s
+LC_CTYPE C.UTF-8
+
+AFL_LLVM_USE_TRACE_PC 1
+AFL_LLVM_DICT2FILE /out/afl++.dict
+FUZZER_LIB /libAFLDriver.a
+
+AFL_QUIET 1
+AFL_MAP_SIZE 2621440
+#+end_src
+
+* Modified AFLpp to pass cc args
+** Arguments
+ make debug-builder-aflplusplus_ast_o0-freetype2-2017
+
+#+begin_src bash
+[+] Using AST_CC_ARGS: '-O0'
+[+] All CC params:
+/usr/local/bin/clang
+-Wno-unused-command-line-argument
+-fexperimental-new-pass-manager
+-fpass-plugin=/afl/afl-llvm-dict2file.so
+-fno-inline
+-fexperimental-new-pass-manager
+-fpass-plugin=/afl/cmplog-switches-pass.so
+-fexperimental-new-pass-manager
+-fpass-plugin=/afl/split-switches-pass.so
+-fexperimental-new-pass-manager
+-fpass-plugin=/afl/SanitizerCoveragePCGUARD.so
+-fexperimental-new-pass-manager
+-fpass-plugin=/afl/cmplog-instructions-pass.so
+-fexperimental-new-pass-manager
+-fpass-plugin=/afl/cmplog-routines-pass.so
+-DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION
+-pthread
+-Wl,--no-as-needed
+-Wl,-ldl
+-Wl,-lm
+-Wno-unused-command-line-argument
+-O3
+-Wall
+-Wformat
+-Wformat-security
+-o bsdcat cat/bsdcat-bsdcat.o cat/bsdcat-cmdline.o ./.libs/libarchive_fe.a ./.libs/libarchive.a
+-lz
+-pthread
+-O0
+-D__AFL_HAVE_MANUAL_CONTROL=1
+-D__AFL_COMPILER=1
+-DFUZZING_BUILD_MODE_UNSAFE_FOR_PRODUCTION=1
+-D__AFL_FUZZ_INIT()=int __afl_sharedmem_fuzzing = 1;extern unsigned int *__afl_fuzz_len;extern unsigned char *__afl_fuzz_ptr;unsigned char __afl_fuzz_alt[1048576];unsigned char *__afl_fuzz_alt_ptr = __afl_fuzz_alt;
+-D__AFL_COVERAGE()=int __afl_selective_coverage = 1;void __afl_coverage_discard();void __afl_coverage_skip();void __afl_coverage_on();void __afl_coverage_off();
+-D__AFL_COVERAGE_START_OFF()=int __afl_selective_coverage_start_off = 1;
+-D__AFL_COVERAGE_ON()=__afl_coverage_on()
+-D__AFL_COVERAGE_OFF()=__afl_coverage_off()
+-D__AFL_COVERAGE_DISCARD()=__afl_coverage_discard()
+-D__AFL_COVERAGE_SKIP()=__afl_coverage_skip()
+-D__AFL_FUZZ_TESTCASE_BUF=(__afl_fuzz_ptr ? __afl_fuzz_ptr : __afl_fuzz_alt_ptr)
+-D__AFL_FUZZ_TESTCASE_LEN=(__afl_fuzz_ptr ? *__afl_fuzz_len : (*__afl_fuzz_len = read(0, __afl_fuzz_alt_ptr, 1048576)) == 0xffffffff ? 0 : *__afl_fuzz_len)
+-D__AFL_LOOP(_A)=({ static volatile char *_B __attribute__((used));  _B = (char*)"##SIG_AFL_PERSISTENT##"; __attribute__((visibility("default"))) int _L(unsigned int) __asm__("__afl_persistent_loop"); _L(_A); })
+-D__AFL_INIT()=do { static volatile char *_A __attribute__((used));  _A = (char*)"##SIG_AFL_DEFER_FORKSRV##"; __attribute__((visibility("default"))) void _I(void) __asm__("__afl_manual_init"); _I(); } while (0)
+-Wno-unused-command-line-argument /afl/afl-compiler-rt.o
+-Wl,--dynamic-list=/afl/dynamic_list.txt
+
+#+end_src
