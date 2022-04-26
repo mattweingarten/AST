@@ -12,5 +12,5 @@ PYTHONPATH=$FUZZBENCH_HOME python3 $FUZZBENCH_HOME/experiment/run_experiment.py 
     --allow-uncommitted-changes \
     --experiment-config $SCRIPT_DIR/experiment-config.bean.yaml  \
     --experiment-name "$name"  \
-    --benchmarks libpng-1.2.56 \
+    --benchmarks aspell_aspell_fuzzer \
     --fuzzers aflplusplus_ast_o0 aflplusplus_ast_o1 aflplusplus_ast_o2 aflplusplus_ast_o3
