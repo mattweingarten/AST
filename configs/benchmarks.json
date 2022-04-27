@@ -1,3 +1,0 @@
-{
-    "benchmarks": ["lcms","libxml2","openthread","sqlite3","woff", "bloaty", "aspell","freetype","libpng"] 
-}

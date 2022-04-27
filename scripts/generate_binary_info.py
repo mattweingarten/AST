@@ -13,27 +13,9 @@ from argparse import ArgumentParser
 import angr
 from angrutils import * 
 import csv
+from util import *
+from util import get_exp_json
 
-
-def isElf(file):
-    f = open(file,'rb')
-    l = f.readline()
-    if(l[1] == 69 and l[2] == 76 and l[3] == 70): #check executable
-       f.close()
-       return True
-    else:
-        f.close()
-        return False 
-
-def get_benchmark(f, benchmarks):
-    for benchmark in benchmarks:
-        if benchmark in f:
-            return benchmark
-
-def get_flag(f, flags):
-    for flag in flags:
-        if flag in f:
-            return flag
 
 
 def binary_analysis(elf): #returns (nodes,edges)
@@ -73,26 +55,22 @@ parser = ArgumentParser()
 
 
 parser.add_argument('--folder', default="")
-parser.add_argument('--bench_file_path', default="")
-parser.add_argument('--flags',nargs='+', default=["o0", "o1", "o2", "o3"], required=False)
+parser.add_argument('--exp_json_path', default="configs/exp_setup.json")
 
 args = vars( parser.parse_args())
 
 
-bench_file = open(args['bench_file_path'])
 
-bench_json = json.load(bench_file)
-
+bench_json = get_exp_json(args['exp_json_path'])
 
 
-data_f = open("binary_data.csv", 'a+')
-csv_writer = csv.writer(data_f, delimiter=',')
+
+out = open("out/binary_data.csv", 'a+')
+csv_writer = csv.writer(out, delimiter=',')
 starting_dir = args['folder']
-flags = args['flags']
-handle_folder(starting_dir, flags, bench_json['benchmarks'],csv_writer)
+handle_folder(starting_dir, bench_json['flags'], bench_json['benchmarks'],csv_writer)
 
-bench_file.close()
-data_f.close()
+out.close()
 
 
 
