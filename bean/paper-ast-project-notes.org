@@ -9,7 +9,6 @@
 - Use *Clang's source based coverage*
   - Why? Not biased towards a particular fuzzer, same coverage tool across all fuzzers
 
-
 * Fuzzbench Configs
 ** Options to AFL++
 #+begin_quote
@@ -40,8 +39,6 @@ fuzzer_build
 *** TODO afl-clang-fast is used? Dont we want afl-clang-lto?
   - LOT: afl-clang-lto - collision free instrumentation at link time, https://github.com/AFLplusplus/AFLplusplus/blob/stable/instrumentation/README.lto.md
   - Unclear whether performs better than afl++ fast
-
-
 ** Aflo0
 #+begin_src
 AFL++ build:
@@ -406,3 +403,29 @@ AFL_MAP_SIZE 2621440
 -Wl,--dynamic-list=/afl/dynamic_list.txt
 
 #+end_src
+
+
+* Plots
+* Controlled Compilation
+** Various Links
+- Useful summary (but translated from chinese) https://chowdera.com/2022/02/202202261735583366.html
+
+** Best Results in fuzzbenc (aflpp paper)
+- aflplusplus_optimal_shmem
+- https://github.com/google/fuzzbench/issues/563
+
+** AFL plus plus default options in fuzzbench
+- build_modes = ['tracepc', 'cmplog', 'dict2file']
+
+  'tracepc'
+  os.environ['AFL_LLVM_USE_TRACE_PC'] = '1'
+
+  'cmplog'
+  new_env['AFL_LLVM_CMPLOG'] = '1'
+
+  'dict2file'
+  os.environ['AFL_LLVM_DICT2FILE'] = build_directory + '/afl++.dict'
+
+
+** Region coverage
+Region coverage is the percentage of code regions which have been executed at least once. A code region may span multiple lines (e.g in a large function body with no control flow). However, it’s also possible for a single line to contain multiple code regions (e.g in “return x || y && z”).
