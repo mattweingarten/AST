@@ -1,5 +1,4 @@
 flag,o0,o1,o2,o3
-llvm-as < /dev/null | opt -O3 -disable-output -debug-pass=Arguments -enable-new-pm=0,False,False,False,False
 -tti,True,True,True,True
 -verify,True,True,True,True
 -targetlibinfo,True,True,True,True
