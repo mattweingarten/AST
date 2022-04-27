@@ -1,3 +1,6 @@
+import os
+from datetime import datetime
+
 import pandas
 import pandas as pd
 import seaborn
@@ -88,9 +91,66 @@ def barplot(experiment_data):
 
     fig.show()
 
+def plot_all(experiment_data):
+    SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+    fuzzer_names = experiment_data.fuzzer.unique()
+    plotter = plotting.Plotter(fuzzer_names)
+
+    dir = SCRIPT_DIR + '/fuzzbench_plots/' + datetime.now().isoformat()
+    os.makedirs(dir, exist_ok= True)
+
+    results = experiment_results.ExperimentResults(experiment_data, None, dir, plotter)
+    benchmarks = {b.name: b for b in results.benchmarks}
+
+    for key in benchmarks.keys():
+        benchmark = benchmarks[key]
+        benchmark.fuzzers_with_not_enough_samples
+        benchmark.summary_table
+        benchmark.rank_by_mean
+        benchmark.rank_by_median
+        benchmark.rank_by_average_rank
+        benchmark.rank_by_stat_test_wins
+        benchmark.mann_whitney_p_values
+        benchmark.bug_mann_whitney_p_values
+        benchmark.vargha_delaney_a12_values
+        benchmark.bug_vargha_delaney_a12_values
+        benchmark.mann_whitney_plot
+        benchmark.bug_mann_whitney_plot
+        benchmark.vargha_delaney_plot
+        benchmark.bug_vargha_delaney_plot
+        benchmark.anova_p_value
+        benchmark.anova_posthoc_p_values
+        benchmark.anova_student_plot
+        benchmark.anova_turkey_plot
+        benchmark.kruskal_p_value
+        benchmark.kruskal_posthoc_p_values
+        benchmark.kruskal_conover_plot
+        benchmark.kruskal_mann_whitney_plot
+        benchmark.kruskal_wilcoxon_plot
+        benchmark.kruskal_dunn_plot
+        benchmark.kruskal_nemenyi_plot
+        benchmark.coverage_growth_plot
+        benchmark.coverage_growth_plot_logscale
+        benchmark.violin_plot
+        benchmark.bug_violin_plot
+        benchmark.box_plot
+        benchmark.bug_box_plot
+        benchmark.distribution_plot
+        benchmark.ranking_plot
+        benchmark.better_than_plot
+
+        # benchmark.unique_coverage_ranking_plot
+        # benchmark.pairwise_unique_coverage_table
+        # benchmark.pairwise_unique_coverage_plot
+        # benchmark.bug_coverage_growth_plot_logscale
+        # benchmark.bug_coverage_growth_plot_logscale
+
+
+
 if __name__ == '__main__':
     data = load_benchmarks()
     # fuzzbench_analysis(data)
     # barplot(data)
-    # clean_up_data(data)
+    plot_all(data)
+
     pass
