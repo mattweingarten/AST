@@ -87,9 +87,12 @@ def barplot(experiment_data):
     plt.ylabel('Edge coverage')
     plt.xlabel('Benchmark')
     plt.xticks(rotation=45)
-    plt.title('Edges Covered median')
+    plt.title('Edge Coverage (Median)')
+    plt.legend(title = 'Fuzzer')
 
-    fig.show()
+    # fig.show()
+    fig.savefig('edge_cov.png')
+
 
 def plot_all(experiment_data):
     SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -150,7 +153,7 @@ def plot_all(experiment_data):
 if __name__ == '__main__':
     data = load_benchmarks()
     # fuzzbench_analysis(data)
-    # barplot(data)
-    plot_all(data)
+    barplot(data)
+    # plot_all(data)
 
     pass
