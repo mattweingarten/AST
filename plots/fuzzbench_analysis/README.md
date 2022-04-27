@@ -1,0 +1,7 @@
+## Setup
+
+- source virtual environment of fuzzbench
+- install jupyter: pip install notebook
+- set FUZZBENCH_HOME in fuzzbench_plots.py
+
+Run jupyter notebooks for results

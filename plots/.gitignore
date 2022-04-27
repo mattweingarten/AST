@@ -1,3 +1,9 @@
 venv
 /plot_out/
 .idea
+/fuzzbench_analysis/sqlite3_ossfuzz_coverage_growth.svg
+/fuzzbench_analysis/sqlite3_ossfuzz_mann_whitney_plot.svg
+/fuzzbench_analysis/sqlite3_ossfuzz_violin.svg
+/fuzzbench_analysis/experiment_critical_difference_plot.svg
+/fuzzbench_analysis/.ipynb_checkpoints/
+/experiment_critical_difference_plot.svg
