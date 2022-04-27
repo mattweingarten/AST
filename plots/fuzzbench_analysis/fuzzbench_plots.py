@@ -1,4 +1,5 @@
 import pandas
+import pandas as pd
 import seaborn
 from matplotlib import pyplot, pyplot as plt
 
@@ -59,6 +60,7 @@ def barplot(experiment_data):
         for fuzz in fuzzers_in_bench_data:
             f = filter_fuzzers(bench_data, [fuzz])
             medians = f.groupby('fuzzer')['edges_covered'].median()
+
             key = medians.keys()[0]
             value = medians[0]
             if key not in vals:
@@ -72,7 +74,6 @@ def barplot(experiment_data):
     #     'fuzz1': [0.15, 0.35],
     #     'fuzz2': [0.15, 0.35],
     # })
-
     df = pandas.DataFrame(vals)
     print(df)
     fig, ax1 = pyplot.subplots(figsize=(10, 15))
@@ -87,9 +88,9 @@ def barplot(experiment_data):
 
     fig.show()
 
-
 if __name__ == '__main__':
     data = load_benchmarks()
     # fuzzbench_analysis(data)
-    barplot(data)
+    # barplot(data)
+    # clean_up_data(data)
     pass

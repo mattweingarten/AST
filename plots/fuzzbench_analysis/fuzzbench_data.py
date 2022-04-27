@@ -4,6 +4,9 @@ import os
 import socket
 import sys
 import pandas as pd
+
+from analysis.data_utils import filter_benchmarks, filter_fuzzers
+
 pd.set_option('expand_frame_repr', False)
 
 import matplotlib.pyplot as plt
@@ -43,6 +46,10 @@ def read_benchmarks(home_path, benchmark_dir_names):
 
 
 def load_benchmarks():
+    """
+    Load fuzzbench data.csv files
+    """
+
     home_mat = REPO_HOME + 'wmatt/report-data'
     benchmarks_matt = [
         'bloatyfuzztarget-all4hours1'
@@ -66,7 +73,55 @@ def load_benchmarks():
     experiment_data = pd.concat([experiment_data_0, experiment_data_1], axis=0)
     return experiment_data
 
+
+def clean_up_data(experiment_data):
+    """
+    Clean up data into unified csv file
+    """
+    fuzzer_names = experiment_data.fuzzer.unique()
+
+    plotter = plotting.Plotter(fuzzer_names)
+    results = experiment_results.ExperimentResults(experiment_data, None, '.', plotter)
+    benchmarks = {b.name: b for b in results.benchmarks}
+
+    rows = []
+    for b in benchmarks:
+        bench_data = filter_benchmarks(experiment_data, [b])
+        fuzzers_in_bench_data = bench_data.fuzzer.unique()
+
+        def get_key_val(res):
+            return res.keys()[0], res[0]
+
+        for fuzz in fuzzers_in_bench_data:
+            f = filter_fuzzers(bench_data, [fuzz])
+
+            medians = f.groupby('fuzzer')['edges_covered'].median()
+            means = f.groupby('fuzzer')['edges_covered'].mean()
+            maxs = f.groupby('fuzzer')['edges_covered'].max()
+            mins = f.groupby('fuzzer')['edges_covered'].min()
+
+            times = f.groupby('fuzzer')['time'].max()
+
+            fuzzer_name, median = get_key_val(medians)
+            _, mean = get_key_val(means)
+            _, max = get_key_val(maxs)
+            _, min = get_key_val(mins)
+            _, time = get_key_val(times)
+
+            exp =  bench_data.experiment[0]
+
+            # id, benchmark-name, fuzzer name,
+            rows.append([exp, b, fuzz, mean, median, max, min, time])
+
+    df = pd.DataFrame(rows,
+                      columns=['Experiment', 'benchmark', 'fuzzer', 'edgecov-mean', 'edgecov-median', 'edgecov-max',
+                               'edgecov-min', 'time'])
+
+    df.to_csv('./experiment_result_cleaned.csv')
+
+
 if __name__ == '__main__':
     experiment_data = load_benchmarks()
+    clean_up_data(experiment_data)
 
 
