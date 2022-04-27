@@ -73,14 +73,13 @@ parser = ArgumentParser()
 
 
 parser.add_argument('--folder', default="")
-
-
+parser.add_argument('--bench_file_path', default="")
 parser.add_argument('--flags',nargs='+', default=["o0", "o1", "o2", "o3"], required=False)
 
 args = vars( parser.parse_args())
 
 
-bench_file = open("benchmarks.json")
+bench_file = open(args['bench_file_path'])
 
 bench_json = json.load(bench_file)
 
