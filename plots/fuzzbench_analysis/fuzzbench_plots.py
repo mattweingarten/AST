@@ -28,7 +28,6 @@ def fuzzbench_analysis(experiment_data):
 
     # %%
     # sqlite = benchmarks['sqlite3_ossfuzz']
-    # SVG(sqlite.violin_plot)
     # SVG(sqlite.coverage_growth_plot)
     # SVG(sqlite.mann_whitney_plot)
     # print(sqlite.mann_whitney_p_values)
