@@ -1,0 +1,1 @@
+llvm-as < /dev/null | opt -O3 -disable-output -debug-pass=Arguments -enable-new-pm=0
