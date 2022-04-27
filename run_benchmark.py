@@ -1,4 +1,3 @@
-from pickle import GLOBAL
 import sys
 import re
 import os
