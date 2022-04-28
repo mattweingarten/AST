@@ -1,9 +1,9 @@
 benchmarks:
-- lcms-2017-03-21
+- stb_stbi_read_fuzzer
 concurrent_builds: null
 description: null
 docker_registry: gcr.io/fuzzbench
-experiment: exp-2022-04-27-11-11-06
+experiment: exp-2022-04-28-04-27-41
 experiment_filestore: /home/b/tmp/ast-fuzz/experiment-data
 fuzzers:
 - aflplusplus_ast_o0
