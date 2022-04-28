@@ -4,6 +4,7 @@ from datetime import datetime
 import pandas
 import pandas as pd
 import seaborn
+from IPython.core.display import SVG
 from matplotlib import pyplot, pyplot as plt
 
 from analysis import data_utils, experiment_results, plotting
@@ -105,6 +106,9 @@ def plot_all(experiment_data):
     results = experiment_results.ExperimentResults(experiment_data, None, dir, plotter)
     benchmarks = {b.name: b for b in results.benchmarks}
 
+    results.critical_difference_plot
+    pass
+
     for key in benchmarks.keys():
         benchmark = benchmarks[key]
         benchmark.fuzzers_with_not_enough_samples
@@ -153,7 +157,7 @@ def plot_all(experiment_data):
 if __name__ == '__main__':
     data = load_benchmarks()
     # fuzzbench_analysis(data)
-    barplot(data)
-    # plot_all(data)
+    # barplot(data)
+    plot_all(data)
 
     pass
