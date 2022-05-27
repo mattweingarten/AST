@@ -1,18 +1,16 @@
 benchmarks:
-- poppler_pdf_fuzzer
+- libhtp_fuzz_htp
 concurrent_builds: 1
 description: null
 docker_registry: gcr.io/fuzzbench
-experiment: exp-2022-04-28-11-50-47
+experiment: exp-2022-05-27-17-00-11
 experiment_filestore: /home/b/tmp/ast-fuzz/experiment-data
 fuzzers:
-- aflplusplus_ast_o0
-- aflplusplus_ast_o1
-- aflplusplus_ast_o2
-- aflplusplus_ast_o3
-git_hash: 23b47148183fae6cbfcdf65c698dffe01fe3d532
+- aflplusplus_ast_f0
+- aflplusplus_ast_f1
+git_hash: da85d2eb25be99b08f26010a637a4c9ec3035283
 local_experiment: true
-max_total_time: 14400
+max_total_time: 180
 measurers_cpus: null
 no_dictionaries: false
 no_seeds: false
