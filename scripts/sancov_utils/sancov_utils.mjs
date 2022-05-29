@@ -145,6 +145,9 @@ async function extractCovBinary(bmDir) {
 
 async function coverageRun(binary, corpusDir) {
     const tmpDir = (await $`mktemp -d  --tmpdir=${TMP_ROOT}`).stdout.trim()
+
+    // await $`UBSAN_OPTIONS=allocator_release_to_os_interval_ms=500:handle_abort=2:handle_segv=2:handle_sigbus=2:handle_sigfpe=2:handle_sigill=2:print_stacktrace=1:symbolize=1:symbolize_inline_frames=0  ASAN_OPTIONS=alloc_dealloc_mismatch=0:allocator_may_return_null=1:allocator_release_to_os_interval_ms=500:allow_user_segv_handler=0:check_malloc_usable_size=0:detect_leaks=1:detect_odr_violation=0:detect_stack_use_after_return=1:fast_unwind_on_fatal=0:handle_abort=2:handle_segv=2:handle_sigbus=2:handle_sigfpe=2:handle_sigill=2:max_uar_stack_size_log=16:quarantine_size_mb=64:strict_memcmp=1:symbolize=1:symbolize_inline_frames=0:coverage=1:coverage_dir=${tmpDir} ${binary} ${corpusDir}`
+
     await $`ASAN_OPTIONS=coverage=1:coverage_dir=${tmpDir} ${binary} ${corpusDir}`
     let covFile = await getDirContent(tmpDir, 'f')
     return covFile
