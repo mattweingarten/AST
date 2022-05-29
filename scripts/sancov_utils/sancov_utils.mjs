@@ -9,6 +9,8 @@ import {createObjectCsvWriter} from 'csv-writer'
  * Requirements:
  * - sancov
  * - node 16+
+ *
+ * run npm install in this directory
  */
 
 'use strict';
