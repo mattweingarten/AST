@@ -1,24 +1,55 @@
-#!/usr/bin/env zx
-'use strict';
+#!/usr/bin/env node
+import {$, argv, cd, chalk, fs, question} from 'zx'
+import {createObjectCsvWriter} from 'csv-writer'
 
+
+'use strict';
 $.verbose = false
 
 
-const BM_DIR = '/home/b/bdata-unsync/ast-fuzz/experiment-data/exp-2022-05-28-20-02-46'
+if (process.argv.length != 3) {
+    console.log("needs path to experiment, e.g. /home/b/bdata-unsync/ast-fuzz/experiment-data/exp-2022-05-28-20-02-46'")
+    process.exit(0)
+}
+
+const BM_DIR = process.argv[2]
 
 const pwd = (await $`pwd`).stdout.trim()
 const TMP_ROOT = pwd + '/sancov_util_tmp'
+
+info(`Deleting temp dir ${TMP_ROOT}`)
 await $`rm -rf ${TMP_ROOT}`
 await $`mkdir -p ${TMP_ROOT}`
 
-const RES_DIR = pwd + '/sancov_util_results'
+let exp = await base(BM_DIR)
+const RES_DIR = pwd + '/sancov_util_results/' + exp
+info(`Creating result dir ${RES_DIR}`)
 await $`mkdir -p ${RES_DIR}`
 
 let dir = BM_DIR
+
+
+const csvPath = RES_DIR + '/sancov_out.csv'
+const csvWriter = createObjectCsvWriter({
+    path: csvPath,
+    header: [ 'experiment', 'benchmark', 'trial', 'corpusNr', 'edges', 'sancov_file']
+});
+
+let csvData = []
+
 await main(dir)
 
+csvWriter
+    .writeRecords(csvData)
+    .then(()=> console.log('The CSV file was written successfully', csvPath));
+
+
+function info(msg) {
+    console.log(chalk.blue('[+] ' + msg))
+}
 
 async function main(dir) {
+
     let covBinary = await extractCovBinary(dir)
     let benchmarks = await getFuzzerBmPairs(dir)
     for(let b of benchmarks) {
@@ -35,6 +66,7 @@ async function main(dir) {
 
                 let trialNr = parseInt((await base(t)).replace('trial-', ''))
                 let corpusNr = parseInt((await(base(c))).replace('corpus-archive-', '').replace('.tar.gz', ''))
+
 
                 await handleEntry(dir, b, t, trialNr, corpusPath, corpusNr, covFile)
             }
@@ -55,13 +87,21 @@ async function handleEntry(experimentPath,
     let benchName = await base(benchmarkPath)
     let trialName = await base(trialPath)
     let corpusName = await base(corpusPath)
-    let covNamee = await base(coverageFile)
     let edges = await sancovReachedEdges(coverageFile)
 
     let finalName = RES_DIR  + `/sancov__${expName}__${benchName}__${trialName}__${corpusNr}.sancov`
     await $`cp -rf ${coverageFile} ${finalName}`
 
     console.log(edges, 'for ' + finalName)
+
+    csvData.push({
+        'experiment': expName,
+        'benchmark': benchName,
+        'trial': trialNr,
+        'corpusNr': corpusNr,
+        'edges': edges,
+        'sancov_file': finalName
+    })
 }
 
 async function sancovReachedEdges(sancovFile) {
