@@ -16,6 +16,7 @@ $.verbose = false
 
 // if false do only use last snapshot, i.e. one snapshot per trial
 const ALL_SNAPSHOTS = false
+const DEL_TMP_DIR = false
 
 if (process.argv.length != 3) {
     console.log("needs path to experiment, e.g. /home/b/bdata-unsync/ast-fuzz/experiment-data/exp-2022-05-28-20-02-46'")
@@ -27,8 +28,10 @@ const pwd = (await $`pwd`).stdout.trim()
 
 // Tmp directory
 const TMP_ROOT = pwd + '/sancov_util_tmp'
-info(`Deleting temp dir ${TMP_ROOT}`)
-await $`rm -rf ${TMP_ROOT}`
+if (DEL_TMP_DIR) {
+    info(`Deleting temp dir ${TMP_ROOT}`)
+    await $`rm -rf ${TMP_ROOT}`
+}
 await $`mkdir -p ${TMP_ROOT}`
 
 // data directory
