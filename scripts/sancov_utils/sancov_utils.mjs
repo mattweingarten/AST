@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import {$, argv, cd, chalk, fs, question} from 'zx'
 import {createObjectCsvWriter} from 'csv-writer'
-
 /*
  * Usage:
  * sancov_utils.mjs <path to experiment-data>
@@ -9,13 +8,14 @@ import {createObjectCsvWriter} from 'csv-writer'
  * Requirements:
  * - sancov
  * - node 16+
- *
- * run npm install in this directory
+ * - run npm install in this directory
+ * - set ALL_SNAPSHOTS
  */
-
 'use strict';
 $.verbose = false
 
+// if false do only use last snapshot, i.e. one snapshot per trial
+const ALL_SNAPSHOTS = false
 
 if (process.argv.length != 3) {
     console.log("needs path to experiment, e.g. /home/b/bdata-unsync/ast-fuzz/experiment-data/exp-2022-05-28-20-02-46'")
@@ -23,86 +23,80 @@ if (process.argv.length != 3) {
 }
 
 const BM_DIR = process.argv[2]
-
 const pwd = (await $`pwd`).stdout.trim()
-const TMP_ROOT = pwd + '/sancov_util_tmp'
 
+// Tmp directory
+const TMP_ROOT = pwd + '/sancov_util_tmp'
 info(`Deleting temp dir ${TMP_ROOT}`)
 await $`rm -rf ${TMP_ROOT}`
 await $`mkdir -p ${TMP_ROOT}`
 
+// data directory
 let exp = await base(BM_DIR)
 const RES_DIR = pwd + '/sancov_util_results/' + exp
 info(`Creating result dir ${RES_DIR}`)
 await $`mkdir -p ${RES_DIR}`
 
-let dir = BM_DIR
-
-
+let csvData = []
 const csvPath = RES_DIR + '/sancov_out.csv'
 const csvWriter = createObjectCsvWriter({
     path: csvPath,
     header: [ 'experiment', 'benchmark', 'trial', 'corpusNr', 'edges', 'sancov_file']
 });
 
-let csvData = []
-
-await main(dir)
+await main(BM_DIR)
 
 csvWriter
     .writeRecords(csvData)
     .then(()=> console.log('The CSV file was written successfully', csvPath));
 
-
-function info(msg) {
-    console.log(chalk.blue('[+] ' + msg))
-}
-
 async function main(dir) {
-
     let covBinary = await extractCovBinary(dir)
     let benchmarks = await getFuzzerBmPairs(dir)
     for(let b of benchmarks) {
         let trials = await getTrials(dir, b)
         for(let t of trials) {
             let corpuses = await getCorpusesForTrial(t)
-            for(let c of corpuses) {
-                if (!c.endsWith("tar.gz")) {
-                    console.log(`skipping ${c}`)
-                    continue
+
+            if (ALL_SNAPSHOTS) {
+                for(let c of corpuses) {
+                    await handleEntry(covBinary, dir, b, t, c)
                 }
-                let corpusPath = await extractCorpus(c)
-                let covFile = await coverageRun(covBinary, corpusPath)
-
-                let trialNr = parseInt((await base(t)).replace('trial-', ''))
-                let corpusNr = parseInt((await(base(c))).replace('corpus-archive-', '').replace('.tar.gz', ''))
-
-
-                await handleEntry(dir, b, t, trialNr, corpusPath, corpusNr, covFile)
+            } else {
+                // Use only last corpus
+                let _cx = corpuses.filter(c => c.endsWith("tar.gz")).sort()
+                let c = _cx[_cx.length - 1]
+                await handleEntry(covBinary, dir, b, t, c)
             }
         }
     }
 }
-
-async function handleEntry(experimentPath,
+async function handleEntry(covBinary,
+                           experimentPath,
                            benchmarkPath,
                            trialPath,
-                           trialNr,
-                           corpusPath,
-                           corpusNr,
-                           coverageFile) {
+                           corpusTarPath) {
 
+    if (!corpusTarPath.endsWith("tar.gz")) {
+        console.log(`skipping ${corpusTarPath}`)
+        return
+    }
+
+    let corpusPath = await extractCorpus(corpusTarPath)
+    let covFile = await coverageRun(covBinary, corpusPath)
+    let trialNr = parseInt((await base(trialPath)).replace('trial-', ''))
+    let corpusNr = parseInt((await(base(corpusTarPath))).replace('corpus-archive-', '').replace('.tar.gz', ''))
 
     let expName = await(base (experimentPath))
     let benchName = await base(benchmarkPath)
     let trialName = await base(trialPath)
     let corpusName = await base(corpusPath)
-    let edges = await sancovReachedEdges(coverageFile)
+    let edges = await sancovReachedEdges(covFile)
 
     let finalName = RES_DIR  + `/sancov__${expName}__${benchName}__${trialName}__${corpusNr}.sancov`
-    await $`cp -rf ${coverageFile} ${finalName}`
+    await $`cp -rf ${covFile} ${finalName}`
 
-    console.log(edges, 'for ' + finalName)
+    info(`Benchmark ${benchName}, trial ${trialNr}, corpus ${corpusNr} got ${edges} edges`)
 
     csvData.push({
         'experiment': expName,
@@ -134,7 +128,6 @@ async function extractCorpus(corpusDir) {
     return tmpDir + '/corpus/default/queue'
 }
 
-
 async function extractCovBinary(bmDir) {
     const tmpDir = (await $`mktemp -d --tmpdir=${TMP_ROOT}`).stdout.trim()
     cd(tmpDir)
@@ -144,17 +137,13 @@ async function extractCovBinary(bmDir) {
     return tmpDir + '/' + binary
 }
 
-
 async function coverageRun(binary, corpusDir) {
     const tmpDir = (await $`mktemp -d  --tmpdir=${TMP_ROOT}`).stdout.trim()
-
     // await $`UBSAN_OPTIONS=allocator_release_to_os_interval_ms=500:handle_abort=2:handle_segv=2:handle_sigbus=2:handle_sigfpe=2:handle_sigill=2:print_stacktrace=1:symbolize=1:symbolize_inline_frames=0  ASAN_OPTIONS=alloc_dealloc_mismatch=0:allocator_may_return_null=1:allocator_release_to_os_interval_ms=500:allow_user_segv_handler=0:check_malloc_usable_size=0:detect_leaks=1:detect_odr_violation=0:detect_stack_use_after_return=1:fast_unwind_on_fatal=0:handle_abort=2:handle_segv=2:handle_sigbus=2:handle_sigfpe=2:handle_sigill=2:max_uar_stack_size_log=16:quarantine_size_mb=64:strict_memcmp=1:symbolize=1:symbolize_inline_frames=0:coverage=1:coverage_dir=${tmpDir} ${binary} ${corpusDir}`
-
     await $`ASAN_OPTIONS=coverage=1:coverage_dir=${tmpDir} ${binary} ${corpusDir}`
     let covFile = await getDirContent(tmpDir, 'f')
     return covFile
 }
-
 
 async function getDirContent(dir, type='d') {
     cd(dir)
@@ -179,4 +168,8 @@ async function getTrials(bmDir, fuzzerBmPair) {
 async function getFuzzerBmPairs(bmDir) {
     const dir = bmDir + '/experiment-folders'
     return await getDirContent(dir)
+}
+
+function info(msg) {
+    console.log(chalk.blue('[+] ' + msg))
 }
