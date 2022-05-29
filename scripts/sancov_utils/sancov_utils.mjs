@@ -2,6 +2,14 @@
 import {$, argv, cd, chalk, fs, question} from 'zx'
 import {createObjectCsvWriter} from 'csv-writer'
 
+/*
+ * Usage:
+ * sancov_utils.mjs <path to experiment-data>
+ *
+ * Requirements:
+ * - sancov
+ * - node 16+
+ */
 
 'use strict';
 $.verbose = false
