@@ -5,7 +5,6 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 RUN=$SCRIPT_DIR/run_experiment.sh
 
 
-
 $RUN freetype2-2017
 $RUN bloaty_fuzz_target
 $RUN curl_curl_fuzzer_http
@@ -21,6 +20,6 @@ $RUN proj4-2017-08-14
 
 
 # done
-# $RUN vorbis-2017-12-11
-# $RUN libjpeg-turbo-07-2017
-# $RUN harfbuzz-1.3.2
+$RUN vorbis-2017-12-11
+$RUN libjpeg-turbo-07-2017
+$RUN harfbuzz-1.3.2

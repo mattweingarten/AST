@@ -9,7 +9,7 @@ from matplotlib import pyplot, pyplot as plt
 
 from analysis import data_utils, experiment_results, plotting
 from analysis.data_utils import add_relative_columns, filter_benchmarks, filter_fuzzers
-from fuzzbench_data import load_benchmarks
+from fuzzbench_data import load_benchmark_post_processing, load_benchmarks
 
 
 def fuzzbench_analysis(experiment_data):
@@ -118,30 +118,32 @@ def plot_all(experiment_data):
         benchmark.rank_by_average_rank
         benchmark.rank_by_stat_test_wins
         benchmark.mann_whitney_p_values
-        benchmark.bug_mann_whitney_p_values
+        # benchmark.bug_mann_whitney_p_values
         benchmark.vargha_delaney_a12_values
-        benchmark.bug_vargha_delaney_a12_values
+        # benchmark.bug_vargha_delaney_a12_values
         benchmark.mann_whitney_plot
-        benchmark.bug_mann_whitney_plot
+        # benchmark.bug_mann_whitney_plot
         benchmark.vargha_delaney_plot
-        benchmark.bug_vargha_delaney_plot
+        # benchmark.bug_vargha_delaney_plot
         benchmark.anova_p_value
         benchmark.anova_posthoc_p_values
         benchmark.anova_student_plot
         benchmark.anova_turkey_plot
         benchmark.kruskal_p_value
+
         benchmark.kruskal_posthoc_p_values
         benchmark.kruskal_conover_plot
         benchmark.kruskal_mann_whitney_plot
         benchmark.kruskal_wilcoxon_plot
         benchmark.kruskal_dunn_plot
         benchmark.kruskal_nemenyi_plot
+
         benchmark.coverage_growth_plot
         benchmark.coverage_growth_plot_logscale
         benchmark.violin_plot
-        benchmark.bug_violin_plot
+        # benchmark.bug_violin_plot
         benchmark.box_plot
-        benchmark.bug_box_plot
+        # benchmark.bug_box_plot
         benchmark.distribution_plot
         benchmark.ranking_plot
         benchmark.better_than_plot
@@ -155,7 +157,8 @@ def plot_all(experiment_data):
 
 
 if __name__ == '__main__':
-    data = load_benchmarks()
+    # data = load_benchmarks()
+    data = load_benchmark_post_processing()
     # fuzzbench_analysis(data)
     # barplot(data)
     plot_all(data)

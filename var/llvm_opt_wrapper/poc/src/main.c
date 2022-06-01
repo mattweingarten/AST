@@ -4,6 +4,13 @@
 int main() {
   printf("hello world\n");
   int a = foo();
-  printf("%d\n", a);
+  a = a + 10;
+
+  int b = 0;
+  for(int i = 0; i < 10; i ++) {
+    b = i;
+  }
+
+  printf("%d\n", a + b);
   return 0;
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import {$, argv, cd, chalk, fs, question} from 'zx'
+import {$, cd, chalk} from 'zx'
 import {createObjectCsvWriter} from 'csv-writer'
 /*
  * Usage:
@@ -15,7 +15,7 @@ import {createObjectCsvWriter} from 'csv-writer'
 $.verbose = false
 
 // if false do only use last snapshot, i.e. one snapshot per trial
-const ALL_SNAPSHOTS = false
+const ALL_SNAPSHOTS = true
 const DEL_TMP_DIR = false
 
 if (process.argv.length != 3) {
@@ -42,27 +42,39 @@ await $`mkdir -p ${RES_DIR}`
 
 let csvData = []
 const csvPath = RES_DIR + '/sancov_out.csv'
+
+
+let headersFuzzbench = ['id', 'git_hash', 'experiment_filestore', 'experiment', 'fuzzer', 'benchmark', 'time_started',
+    'time_ended', 'trial_id', 'time', 'edges_covered', 'fuzzer_stats', 'crash_key', 'bugs_covered']
+
+let headersSancov = ['corpusNr', 'sancov_file']
+
+let headers = []
+headersFuzzbench.concat(headersSancov).forEach(t => headers.push({
+    id: t,
+    title: t
+}))
 const csvWriter = createObjectCsvWriter({
     path: csvPath,
-    header: [ 'experiment', 'benchmark', 'trial', 'corpusNr', 'edges', 'sancov_file']
+    header: headers
 });
 
 await main(BM_DIR)
 
 csvWriter
     .writeRecords(csvData)
-    .then(()=> console.log('The CSV file was written successfully', csvPath));
+    .then(() => console.log('The CSV file was written successfully', csvPath));
 
 async function main(dir) {
     let covBinary = await extractCovBinary(dir)
     let benchmarks = await getFuzzerBmPairs(dir)
-    for(let b of benchmarks) {
+    for (let b of benchmarks) {
         let trials = await getTrials(dir, b)
-        for(let t of trials) {
+        for (let t of trials) {
             let corpuses = await getCorpusesForTrial(t)
 
             if (ALL_SNAPSHOTS) {
-                for(let c of corpuses) {
+                for (let c of corpuses) {
                     await handleEntry(covBinary, dir, b, t, c)
                 }
             } else {
@@ -74,6 +86,7 @@ async function main(dir) {
         }
     }
 }
+
 async function handleEntry(covBinary,
                            experimentPath,
                            benchmarkPath,
@@ -88,27 +101,42 @@ async function handleEntry(covBinary,
     let corpusPath = await extractCorpus(corpusTarPath)
     let covFile = await coverageRun(covBinary, corpusPath)
     let trialNr = parseInt((await base(trialPath)).replace('trial-', ''))
-    let corpusNr = parseInt((await(base(corpusTarPath))).replace('corpus-archive-', '').replace('.tar.gz', ''))
+    let corpusNr = parseInt((await (base(corpusTarPath))).replace('corpus-archive-', '').replace('.tar.gz', ''))
 
-    let expName = await(base (experimentPath))
-    let benchName = await base(benchmarkPath)
+    let expName = await (base(experimentPath))
+    let benchFuzzerName = await base(benchmarkPath) // <benchmark>_fuzzer
     let trialName = await base(trialPath)
     let corpusName = await base(corpusPath)
     let edges = await sancovReachedEdges(covFile)
+    let benchName = await extractBenchmarkName(experimentPath)
+    let fuzzer = benchFuzzerName.replace(benchName + '-', '')
 
-    let finalName = RES_DIR  + `/sancov__${expName}__${benchName}__${trialName}__${corpusNr}.sancov`
+    let finalName = RES_DIR + `/sancov__${expName}__${benchName}__${fuzzer}__${trialName}__${corpusNr}.sancov`
     await $`cp -rf ${covFile} ${finalName}`
 
-    info(`Benchmark ${benchName}, trial ${trialNr}, corpus ${corpusNr} got ${edges} edges`)
+    info(`Benchmark ${benchName}, fuzzer: ${fuzzer}, trial ${trialNr}, corpus ${corpusNr} got ${edges} edges`)
 
-    csvData.push({
+    // same format as fuzzbench data.csv and some extra stuff
+    let entry = {
+        'id': 0,
+        'git_hash': 0,
+        'experiment_filestore': '/not/relevant',
         'experiment': expName,
+        'fuzzer': fuzzer,
         'benchmark': benchName,
-        'trial': trialNr,
+        'time_started': '2022-05-27 04:39:42',
+        'time_ended': '2022-05-27 08:49:44',
+        'trial_id': trialNr,
+        'time': 15 * 60 * corpusNr, // snapshot frequence is 15 mins
+        'edges_covered': edges,
+        'fuzzer_stats': '',
+        'crash_key': '',
+        'bugs_covered': 0,
+        // sancov
         'corpusNr': corpusNr,
-        'edges': edges,
         'sancov_file': finalName
-    })
+    }
+    csvData.push(entry)
 }
 
 async function sancovReachedEdges(sancovFile) {
@@ -121,10 +149,9 @@ async function base(dir) {
 
 async function extractCorpus(corpusDir) {
     const tmpDir = (await $`mktemp -d  --tmpdir=${TMP_ROOT}`).stdout.trim()
-    try{
+    try {
         await $`tar -xf ${corpusDir} -C ${tmpDir}`
-    }
-    catch(exception) {
+    } catch (exception) {
         console.log(corpusDir)
         console.log(exception)
     }
@@ -136,7 +163,7 @@ async function extractCovBinary(bmDir) {
     cd(tmpDir)
     await $`tar -xf ${bmDir}/coverage-binaries/* -C ${tmpDir}`
     cd(tmpDir)
-    let binary=(await $`find . -maxdepth 1 -type f -executable -print`).stdout.trim().replace('./', '')
+    let binary = (await $`find . -maxdepth 1 -type f -executable -print`).stdout.trim().replace('./', '')
     return tmpDir + '/' + binary
 }
 
@@ -148,13 +175,13 @@ async function coverageRun(binary, corpusDir) {
     return covFile
 }
 
-async function getDirContent(dir, type='d') {
+async function getDirContent(dir, type = 'd') {
     cd(dir)
     let res = (await $`find . -maxdepth 1 -type ${type} -print`).stdout.trim().split(/\r?\n/)
-                                                                .filter(el => el != "./")
-                                                                .filter(el => el!= ".")
-                                                                .map(el => el.replace('./', ''))
-                                                                .map(el => dir + '/' + el)
+        .filter(el => el != "./")
+        .filter(el => el != ".")
+        .map(el => el.replace('./', ''))
+        .map(el => dir + '/' + el)
     res.sort()
     return res
 
@@ -173,6 +200,14 @@ async function getFuzzerBmPairs(bmDir) {
     return await getDirContent(dir)
 }
 
-function info(msg) {
+function info(...msg) {
     console.log(chalk.blue('[+] ' + msg))
+}
+
+async function extractBenchmarkName(bmDir) {
+    // coverage-build: coverage-binaries/coverage-build-vorbis-2017-12-11.tar.gz -> vorbis-2017-12-11
+    const dir = bmDir + '/coverage-binaries'
+    let entry = (await getDirContent(dir, 'f'))[0]
+    entry = await (base(entry))
+    return entry.replace('.tar.gz', '').replace('coverage-build-', '')
 }

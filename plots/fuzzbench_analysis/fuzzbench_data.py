@@ -28,6 +28,7 @@ os.makedirs(PLOT_DIR, exist_ok=True)
 
 from analysis import data_utils, experiment_results, plotting
 
+
 def read_benchmarks(home_path, benchmark_dir_names):
     experiment_data = None
     for b in benchmark_dir_names:
@@ -42,6 +43,23 @@ def read_benchmarks(home_path, benchmark_dir_names):
             experiment_data = data
         else:
             experiment_data = pd.concat([experiment_data, data], axis=0)
+    return experiment_data
+
+
+def read_benchmarks_csv_list(csv_paths):
+    experiment_data = None
+    for path in csv_paths:
+        try:
+            data = pd.read_csv(path)
+        except Exception as e:
+            print(path, ' not found')
+            continue
+
+        if experiment_data is None:
+            experiment_data = data
+        else:
+            experiment_data = pd.concat([experiment_data, data], axis=0)
+    print(experiment_data)
     return experiment_data
 
 
@@ -72,6 +90,15 @@ def load_benchmarks():
     experiment_data_1 = read_benchmarks(home_bean, benchmarks_bean)
     experiment_data = pd.concat([experiment_data_0, experiment_data_1], axis=0)
     return experiment_data
+
+
+def load_benchmark_post_processing():
+    data = [
+        # '/home/b/bdata/beandata/eth/projects_eth/eth-sm04-ast/repo/matt-AST/scripts/sancov_utils/sancov_util_results/exp-2022-05-28-00-17-12-libjpeg/sancov_out.csv'
+        # '/home/b/bdata-unsync/ast-fuzz/report-data/experimental/o0_coverage/exp-2022-05-27-19-08-48-vorbis/data.csv',
+        '/home/b/bdata/beandata/eth/projects_eth/eth-sm04-ast/repo/matt-AST/scripts/sancov_utils/sancov_util_results/exp-2022-05-28-00-17-12-libjpeg/sancov_out.csv'
+    ]
+    return read_benchmarks_csv_list(data)
 
 
 def clean_up_data(experiment_data):
@@ -108,7 +135,7 @@ def clean_up_data(experiment_data):
             _, min = get_key_val(mins)
             _, time = get_key_val(times)
 
-            exp =  bench_data.experiment[0]
+            exp = bench_data.experiment[0]
 
             # id, benchmark-name, fuzzer name,
             rows.append([exp, b, fuzz, mean, median, max, min, time])
@@ -123,5 +150,3 @@ def clean_up_data(experiment_data):
 if __name__ == '__main__':
     experiment_data = load_benchmarks()
     clean_up_data(experiment_data)
-
-
