@@ -1,0 +1,14 @@
+# environment variables:
+AFL_CMPLOG_ONLY_NEW=1
+AFL_DISABLE_TRIM=1
+AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
+AFL_KILL_SIGNAL=9
+AFL_NO_AFFINITY=1
+AFL_NO_UI=1
+AFL_MAP_SIZE=2621440
+AFL_SHUFFLE_QUEUE=1
+AFL_SKIP_CPUFREQ=1
+AFL_SKIP_CRASHES=1
+AFL_TESTCACHE_SIZE=2
+# command line:
+'./afl-fuzz' '-i' '/out/seeds' '-o' '/out/corpus' '-m' 'none' '-t' '1000+' '-d' '-x' './afl++.dict' '-c' '/out/cmplog/libpng_read_fuzzer' '-x' '/out/libpng_read_fuzzer.dict' '--' '/out/libpng_read_fuzzer' '2147483647'

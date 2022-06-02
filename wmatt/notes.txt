@@ -1,0 +1,23 @@
+Can we build each -O0 sanitizer locally and test this?
+
+CXX=clang CC=clang++   cmake  -DCMAKE_C_FLAGS="-O0 -fsanitize-coverage=trace-pc-guard"  -G Ninja -DBUILD_TESTING=false
+
+testing run: 
+
+python3 ../AST/run_benchmark.py --benchmarks  bloaty_fuzz_target   --fuzzers aflplusplus_ast_o0  afl_from_input_seed --n testing101 --config ../AST/wmatt/test-config.yaml 
+
+
+-rwxrwxrwx 1 matt matt 38481864 May 26 13:24 bloaty 
+
+ASAN_OPTIONS=coverage=1
+
+PLOTS:
+
+TODO:
+- correlation with complexity of graph
+- plot with edge coverage diff
+- pipline for preseeded runs
+- find more clang flags
+
+
+

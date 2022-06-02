@@ -43,3 +43,5 @@ for benchmark in args['benchmarks']:
 # python3 ../AST/run_benchmark.py --benchmarks lcms-2017-03-21 bloaty_fuzz_target libxml2-v2.9.2  --fuzzers aflplusplus_ast_o0 aflplusplus_ast_o1 aflplusplus_ast_o2 aflplusplus_ast_o3 aflplusplus_ast_f0 aflplusplus_ast_f1 --n f_o_all_2 --config ../AST/wmatt/experiment-config.yaml
 
 
+#python3 ../AST/run_benchmark.py --benchmarks bloaty_fuzz_target  --fuzzers aflplusplus_ast_o0  --n testing1 --config ../AST/wmatt/test-config.yaml 
+

@@ -1,4 +1,4 @@
 {
     "benchmarks": ["lcms","libxml2","openthread","sqlite3","woff", "bloaty", "aspell","freetype","libpng"],
-    "flags": ["o0", "o1","o2","o3"]
+    "flags": ["o0", "o1","o2","o3","f1", "f0"]
 }

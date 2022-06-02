@@ -15,7 +15,7 @@ fi
 set -x
 
 
-extract-bc $AST_NAME
+extract-bc ${OUT}/$AST_NAME
 llvm-dis $AST_NAME.bc
 
 opt ${AST_NAME}.bc -S -o ${AST_NAME}.opt.ll $AST_OPT_FLAGS
