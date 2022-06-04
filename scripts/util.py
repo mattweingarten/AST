@@ -17,6 +17,12 @@ def get_benchmark(file, benchmarks):
             return benchmark
 
 def get_flag(file, flags):
+    if ("aflplusplus_ast_o3_lto") in file:
+        return "aflplusplus_ast_o3_lto"
+    if("aflplusplus_ast_o0_lto" in file):
+        return "aflplusplus_ast_o3_lto"
+    if("aflplusplus_ast_o3_native" in file):
+        return "aflplusplus_ast_o3_native"
     for flag in flags:
         if flag in file:
             return flag

@@ -10,18 +10,19 @@ import sys
 import os
 import argparse
 from argparse import ArgumentParser
-import angr
-from angrutils import * 
+# import angr
+# from angrutils import * 
 import csv
 from util import *
 from util import get_exp_json
+import subprocess
 
 
 
-def binary_analysis(elf): #returns (nodes,edges)
-    proj = angr.Project(elf, auto_load_libs=False)
-    cfg = proj.analyses.CFGFast()
-    return len(cfg.graph.nodes()), len(cfg.graph.edges())
+# def binary_analysis(elf): #returns (nodes,edges)
+#     proj = angr.Project(elf, auto_load_libs=False)
+#     cfg = proj.analyses.CFGFast()
+#     return len(cfg.graph.nodes()), len(cfg.graph.edges())
 
 def handle_folder(curr_dir, flags, benchmarks,csv_writer):
     all_files = [f for f in os.scandir(curr_dir)]
@@ -30,14 +31,27 @@ def handle_folder(curr_dir, flags, benchmarks,csv_writer):
     
     if(len(elfs) > 0):
         
-
+        p = list()
         for elf in elfs:
-            flag = get_flag(elf,flags)
-            benchmark = get_benchmark(elf,benchmarks)
-            print("Doing analysis on elf: " + elf + "...")
-            nodes,edges = binary_analysis(elf)
-            # nodes,edges = (0,0)
-            csv_writer.writerows([[benchmark,flag,str(nodes),str(edges)]])
+            # flag = get_flag(elf,flags)
+            # benchmark = get_benchmark(elf,benchmarks)
+            # print("Doing analysis on elf: " + elf + "...")
+            # nodes,edges = binary_analysis(elf)
+            # # nodes,edges = (0,0)
+            # csv_writer.writerows([[benchmark,flag,str(nodes),str(edges)]])
+            command = [
+                "python3",
+                "./scripts/handle_single_binary.py",
+                elf,
+                get_flag(elf,flags),
+                get_benchmark(elf, benchmarks)
+            ]
+            print(command)
+            sub = subprocess.Popen(command)
+            sub.wait()
+        
+        # exit_codes = [x.wait() for x in p]
+
 
 
 
