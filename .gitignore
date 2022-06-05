@@ -2,4 +2,3 @@
 /var/uniq
 /var/tmp/
 /plots/fuzzbench_analysis/experiment_result_cleaned.csv
-**/.sancov
