@@ -1,3 +1,4 @@
+benchmark,fuzzer,edges
 bloaty_fuzz_target,aflplusplus_ast_o0_lto,22
 bloaty_fuzz_target,aflplusplus_ast_o3_lto,552
 bloaty_fuzz_target,aflplusplus_ast_o3_native,0
