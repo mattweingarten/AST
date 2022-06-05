@@ -9,7 +9,7 @@ from matplotlib import pyplot, pyplot as plt
 
 from analysis import data_utils, experiment_results, plotting
 from analysis.data_utils import add_relative_columns, filter_benchmarks, filter_fuzzers
-from fuzzbench_data import load_benchmark_post_processing, load_benchmarks
+from fuzzbench_data import load_benchmarks
 
 
 def fuzzbench_analysis(experiment_data):

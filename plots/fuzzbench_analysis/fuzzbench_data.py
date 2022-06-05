@@ -48,7 +48,7 @@ def read_benchmarks(home_path, benchmark_dir_names):
 
 
 def make_coverage_monotonic(df):
-    if not df:
+    if df is None:
         return
 
     exp = None
