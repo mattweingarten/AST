@@ -107,10 +107,13 @@ def plot_all(experiment_data):
     benchmarks = {b.name: b for b in results.benchmarks}
     print(benchmarks)
 
-    try:
-        results.critical_difference_plot
-    except:
-        pass
+
+    cov = [b for b in results.benchmarks]
+    for c in cov:
+        print(c.type, c.name)
+
+    results.critical_difference_plot
+
 
     for key in benchmarks.keys():
         benchmark = benchmarks[key]

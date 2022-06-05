@@ -1,20 +1,32 @@
 import json
+import os.path
 
 
 def isElf(file):
     f = open(file,'rb')
     l = f.readline()
-    if(l[1] == 69 and l[2] == 76 and l[3] == 70): #check executable
-       f.close()
-       return True
-    else:
-        f.close()
-        return False 
+    try:
+        if(l[1] == 69 and l[2] == 76 and l[3] == 70): #check executable
+           f.close()
+           return True
+    except:
+        pass
+    f.close()
+    return False
 
 def get_benchmark(file, benchmarks):
+    print(file, benchmarks)
     for benchmark in benchmarks:
         if benchmark in file:
             return benchmark
+
+    # unknown benchmark
+
+    name = os.path.basename(file)
+
+    for b in benchmarks:
+        name = name.replace(b, '')
+    return name
 
 def get_flag(file, flags):
     if ("aflplusplus_ast_o3_lto") in file:

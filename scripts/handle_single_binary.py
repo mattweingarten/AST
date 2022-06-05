@@ -22,7 +22,7 @@ def binary_analysis(elf): #returns (nodes,edges)
     return len(cfg.graph.nodes()), len(cfg.graph.edges())
 
 def main():
-    out = open("out/binary_data.csv", 'a+')
+    out = open("out/binary_data." + str(os.getpid()) + ".csv", 'a+')
     csv_writer = csv.writer(out, delimiter=',')
 
     elf = sys.argv[1]
