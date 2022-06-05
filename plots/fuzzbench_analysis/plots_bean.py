@@ -1,7 +1,13 @@
+import os
+
 import pandas as pd
 
 from fuzzbench_data import load_benchmarks, read_benchmarks_csv_list
 from fuzzbench_plots import plot_all
+
+SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+
+D = SCRIPT_DIR + "/../../var/data/sancov/miner/miner"
 
 data = [
 ]
