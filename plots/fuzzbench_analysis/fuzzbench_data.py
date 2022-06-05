@@ -43,7 +43,34 @@ def read_benchmarks(home_path, benchmark_dir_names):
             experiment_data = data
         else:
             experiment_data = pd.concat([experiment_data, data], axis=0)
+    make_coverage_monotonic(experiment_data)
     return experiment_data
+
+
+def make_coverage_monotonic(df):
+    if not df:
+        return
+
+    exp = None
+    bench = None
+    fuz = None
+    trial = None
+    first = True
+    for index, row in df.iterrows():
+        if first:
+            first = False
+        else:
+            if exp == row['experiment']:
+                if bench == row['benchmark']:
+                    if fuz == row['fuzzer']:
+                        if trial == row['trial_id']:
+                            row['edges_covered'] = max(row['edges_covered'], df.iloc[index - 1].at['edges_covered'])
+                            pass
+
+        exp = row['experiment']
+        bench = row['benchmark']
+        fuz = row['fuzzer']
+        trial = row['trial_id']
 
 
 def read_benchmarks_csv_list(csv_paths):
@@ -60,8 +87,8 @@ def read_benchmarks_csv_list(csv_paths):
         else:
             experiment_data = pd.concat([experiment_data, data], axis=0)
     print(experiment_data)
+    make_coverage_monotonic(experiment_data)
     return experiment_data
-
 
 def load_benchmarks():
     """
@@ -90,16 +117,6 @@ def load_benchmarks():
     experiment_data_1 = read_benchmarks(home_bean, benchmarks_bean)
     experiment_data = pd.concat([experiment_data_0, experiment_data_1], axis=0)
     return experiment_data
-
-
-def load_benchmark_post_processing():
-    data = [
-        # '/home/b/bdata/beandata/eth/projects_eth/eth-sm04-ast/repo/matt-AST/scripts/sancov_utils/sancov_util_results/exp-2022-05-28-00-17-12-libjpeg/sancov_out.csv'
-        # '/home/b/bdata-unsync/ast-fuzz/report-data/experimental/o0_coverage/exp-2022-05-27-19-08-48-vorbis/data.csv',
-        '/home/b/bdata/beandata/eth/projects_eth/eth-sm04-ast/repo/matt-AST/scripts/sancov_utils/sancov_util_results/exp-2022-05-28-00-17-12-libjpeg/sancov_out.csv'
-    ]
-    return read_benchmarks_csv_list(data)
-
 
 def clean_up_data(experiment_data):
     """

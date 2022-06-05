@@ -1,13 +1,22 @@
 benchmarks:
-- freetype2-2017
-concurrent_builds: 3
+- libjpeg-turbo-07-2017
+concurrent_builds: 2
 description: null
 docker_registry: gcr.io/fuzzbench
-experiment: exp-2022-05-31-12-52-24
+experiment: exp-2022-06-03-21-57-58
 experiment_filestore: /home/b/tmp/ast-fuzz/experiment-data
 fuzzers:
-- aflplusplus_ast_opt_simplifycfg
-git_hash: 2f9ccbb46924bb6e8f7394f551c04a769a125329
+- aflplusplus_ast_o3
+- aflplusplus_ast_o2
+- aflplusplus_ast_o1
+- aflplusplus_ast_o0
+- aflplusplus_ast_f0
+- aflplusplus_ast_f1
+- aflplusplus_ast_opt_disable
+- aflplusplus_ast_o3_native
+- aflplusplus_ast_opt_l1
+- aflplusplus_ast_o3_lto
+git_hash: a9b9b094591378ccf4c24d408ab425985ae82378
 local_experiment: true
 max_total_time: 14400
 measurers_cpus: null

@@ -89,7 +89,7 @@ def barplot(experiment_data):
     plt.xlabel('Benchmark')
     plt.xticks(rotation=45)
     plt.title('Edge Coverage (Median)')
-    plt.legend(title = 'Fuzzer')
+    plt.legend(title='Fuzzer')
 
     # fig.show()
     fig.savefig('edge_cov.png')
@@ -101,66 +101,172 @@ def plot_all(experiment_data):
     plotter = plotting.Plotter(fuzzer_names)
 
     dir = SCRIPT_DIR + '/fuzzbench_plots/' + datetime.now().isoformat()
-    os.makedirs(dir, exist_ok= True)
+    os.makedirs(dir, exist_ok=True)
 
     results = experiment_results.ExperimentResults(experiment_data, None, dir, plotter)
     benchmarks = {b.name: b for b in results.benchmarks}
+    print(benchmarks)
 
-    results.critical_difference_plot
-    pass
+    try:
+        results.critical_difference_plot
+    except:
+        pass
 
     for key in benchmarks.keys():
         benchmark = benchmarks[key]
-        benchmark.fuzzers_with_not_enough_samples
-        benchmark.summary_table
-        benchmark.rank_by_mean
-        benchmark.rank_by_median
-        benchmark.rank_by_average_rank
-        benchmark.rank_by_stat_test_wins
-        benchmark.mann_whitney_p_values
-        # benchmark.bug_mann_whitney_p_values
-        benchmark.vargha_delaney_a12_values
-        # benchmark.bug_vargha_delaney_a12_values
-        benchmark.mann_whitney_plot
-        # benchmark.bug_mann_whitney_plot
-        benchmark.vargha_delaney_plot
-        # benchmark.bug_vargha_delaney_plot
-        benchmark.anova_p_value
-        benchmark.anova_posthoc_p_values
-        benchmark.anova_student_plot
-        benchmark.anova_turkey_plot
-        benchmark.kruskal_p_value
-
-        benchmark.kruskal_posthoc_p_values
-        benchmark.kruskal_conover_plot
-        benchmark.kruskal_mann_whitney_plot
-        benchmark.kruskal_wilcoxon_plot
-        benchmark.kruskal_dunn_plot
-        benchmark.kruskal_nemenyi_plot
-
-        benchmark.coverage_growth_plot
-        benchmark.coverage_growth_plot_logscale
-        benchmark.violin_plot
-        # benchmark.bug_violin_plot
-        benchmark.box_plot
-        # benchmark.bug_box_plot
-        benchmark.distribution_plot
-        benchmark.ranking_plot
-        benchmark.better_than_plot
-
-        # benchmark.unique_coverage_ranking_plot
-        # benchmark.pairwise_unique_coverage_table
-        # benchmark.pairwise_unique_coverage_plot
-        # benchmark.bug_coverage_growth_plot_logscale
-        # benchmark.bug_coverage_growth_plot_logscale
-
-
-
-if __name__ == '__main__':
-    # data = load_benchmarks()
-    data = load_benchmark_post_processing()
-    # fuzzbench_analysis(data)
-    # barplot(data)
-    plot_all(data)
-
-    pass
+        try:
+            benchmark.fuzzers_with_not_enough_samples
+        except:
+            pass
+        try:
+            benchmark.summary_table
+        except:
+            pass
+        try:
+            benchmark.rank_by_mean
+        except:
+            pass
+        try:
+            benchmark.rank_by_median
+        except:
+            pass
+        try:
+            benchmark.rank_by_average_rank
+        except:
+            pass
+        try:
+            benchmark.rank_by_stat_test_wins
+        except:
+            pass
+        try:
+            benchmark.mann_whitney_p_values
+        except:
+            pass
+        try:
+            benchmark.bug_mann_whitney_p_values
+        except:
+            pass
+        try:
+            benchmark.vargha_delaney_a12_values
+        except:
+            pass
+        try:
+            benchmark.bug_vargha_delaney_a12_values
+        except:
+            pass
+        try:
+            benchmark.mann_whitney_plot
+        except:
+            pass
+        try:
+            benchmark.bug_mann_whitney_plot
+        except:
+            pass
+        try:
+            benchmark.vargha_delaney_plot
+        except:
+            pass
+        try:
+            benchmark.bug_vargha_delaney_plot
+        except:
+            pass
+        try:
+            benchmark.anova_p_value
+        except:
+            pass
+        try:
+            benchmark.anova_posthoc_p_values
+        except:
+            pass
+        try:
+            benchmark.anova_student_plot
+        except:
+            pass
+        try:
+            benchmark.anova_turkey_plot
+        except:
+            pass
+        try:
+            benchmark.kruskal_p_value
+        except:
+            pass
+        try:
+            benchmark.kruskal_posthoc_p_values
+        except:
+            pass
+        try:
+            benchmark.kruskal_conover_plot
+        except:
+            pass
+        try:
+            benchmark.kruskal_mann_whitney_plot
+        except:
+            pass
+        try:
+            benchmark.kruskal_wilcoxon_plot
+        except:
+            pass
+        try:
+            benchmark.kruskal_dunn_plot
+        except:
+            pass
+        try:
+            benchmark.kruskal_nemenyi_plot
+        except:
+            pass
+        try:
+            benchmark.coverage_growth_plot
+        except:
+            pass
+        try:
+            benchmark.coverage_growth_plot_logscale
+        except:
+            pass
+        try:
+            benchmark.violin_plot
+        except:
+            pass
+        try:
+            benchmark.bug_violin_plot
+        except:
+            pass
+        try:
+            benchmark.box_plot
+        except:
+            pass
+        try:
+            benchmark.bug_box_plot
+        except:
+            pass
+        try:
+            benchmark.distribution_plot
+        except:
+            pass
+        try:
+            benchmark.ranking_plot
+        except:
+            pass
+        try:
+            benchmark.better_than_plot
+        except:
+            pass
+        try:
+            benchmark.unique_coverage_ranking_plot
+        except:
+            pass
+        try:
+            benchmark.pairwise_unique_coverage_table
+        except:
+            pass
+        try:
+            benchmark.pairwise_unique_coverage_plot
+        except:
+            pass
+        try:
+            benchmark.bug_coverage_growth_plot_logscale
+        except:
+            pass
+        try:
+            benchmark.bug_coverage_growth_plot_logscale
+        except:
+            pass

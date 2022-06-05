@@ -2,3 +2,8 @@
 /var/uniq
 /var/tmp/
 /plots/fuzzbench_analysis/experiment_result_cleaned.csv
+/var/llvm_opt_wrapper/poc/main.unopt
+/var/llvm_opt_wrapper/poc/src/main.bc
+/var/llvm_opt_wrapper/poc/src/main.i
+/var/llvm_opt_wrapper/poc/src/test.bc
+/var/llvm_opt_wrapper/poc/src/test.i
