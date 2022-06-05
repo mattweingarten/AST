@@ -20,13 +20,6 @@ def get_benchmark(file, benchmarks):
         if benchmark in file:
             return benchmark
 
-    # unknown benchmark
-
-    name = os.path.basename(file)
-
-    for b in benchmarks:
-        name = name.replace(b, '')
-    return name
 
 def get_flag(file, flags):
     if ("aflplusplus_ast_o3_lto") in file:
