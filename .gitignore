@@ -7,3 +7,4 @@
 /var/llvm_opt_wrapper/poc/src/main.i
 /var/llvm_opt_wrapper/poc/src/test.bc
 /var/llvm_opt_wrapper/poc/src/test.i
+/scripts/__pycache__/util.cpython-310.pyc
