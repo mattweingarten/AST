@@ -14,7 +14,7 @@ The following repositories contain code for this project:
     
 ### Obtaining fuzzing data
 
-Benchmark data is obtained through several hour long fuzzing process (ca. 50 gb in size)
+Benchmark data is obtained through several hour long fuzzing process (ca. 20 gb in size)
 See scripts such as ./bean/run_experiment.sh
 
 The data is then postprocessed using tools:
