@@ -68,11 +68,20 @@ def handle_trial(df):
     df = df.reset_index()  # make sure indexes pair with number of rows
     for index, row in df.iterrows():
 
-        print(row['fuzzer'])
+        # print(row['fuzzer'])
         # print(row['fuzzer'], row['benchmark'], row['sancov_file'])
         # if(row['fuzzer'] == 'afl_from_input_seed'):
             # print(row)
             # exit(1)
+        if(MODE=='pre'):
+            if(not (row['fuzzer'] =='afl_from_input_seed' or row['fuzzer'] ==  'aflplusplus_ast_o3' or row['fuzzer'] == 'aflplusplus_ast_o2')):
+                continue
+        # print(row)
+        # print(row['fuzzer'] =='afl_from_input_seed') 
+        # print(row['fuzzer'] =='aflplusplus_ast_o3')
+        # print(row['fuzzer'] == 'aflplusplus_ast_o2')
+        # print(not (row['fuzzer'] =='afl_from_input_seed' or row['fuzzer'] ==  'aflplusplus_ast_o3' or row['fuzzer'] == 'aflplusplus_ast_o2'))
+        # exit(1)
         if(row['fuzzer'] != 'afl_from_input_seed' and row['corpusNr'] != 17):
             continue
 
@@ -121,7 +130,9 @@ parser = ArgumentParser()
 # parser.add_argument('--exp_json_path', default="configs/exp_setup.json")
 parser.add_argument("--sancov_util_results_path", default="./scripts/sancov_util_results")
 parser.add_argument("--foreign", default=True)
+parser.add_argument("--mode", default="")
 args = vars( parser.parse_args())
+MODE = args['mode']
 results_path = args['sancov_util_results_path'
 ]
 FOREIGN = args['foreign']
@@ -133,8 +144,17 @@ CSV_WRITER = csv.writer(out, delimiter=',')
 out = open("out/unique_edges_total.csv", 'a+')
 CSV_WRITER2 = csv.writer(out, delimiter=',')
 
+out = open("out/total_edges.csv", "+a")
+
+CSV_WRITER3 = csv.writer(out, delimiter=',')
+
+
+
 
 handle_results(results_path)
+
+for fuzzer, benchmark in COVERED_EDGES.keys():
+    CSV_WRITER3.writerow([fuzzer,benchmark, len(COVERED_EDGES[(fuzzer,benchmark)])])
 # print(COVERED_EDGES.keys())
 for fuzzer, benchmark in COVERED_EDGES.keys():
     total = COVERED_EDGES[(fuzzer,benchmark)]

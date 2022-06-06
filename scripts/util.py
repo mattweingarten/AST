@@ -3,7 +3,11 @@ import os.path
 
 def cut_fuzz_name(name):
     if(name == "afl_from_input_seed"):
-        return "comb_O2_O3"
+        return "O2 + O3"
+    if("native" in name):
+        return "O3_native"
+    if("disable" in name):
+        return "O0_lto"
     return name[12:]
 
 def isElf(file):

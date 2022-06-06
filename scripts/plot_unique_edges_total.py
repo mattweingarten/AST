@@ -18,16 +18,17 @@ def save_df_as_image(df, path):
     fig = plot.get_figure()
     plot.xaxis.set_label_position('top') 
     plt.gcf().subplots_adjust(bottom=0.25, left=0.25)
+    plt.xticks(rotation=90) 
     fig.savefig(path)
 
 
     
-if(len(sys.argv) != 3):
+if(len(sys.argv) != 4):
     print("Add param and json config to data file")
 
 bench_json = get_exp_json(sys.argv[2])
 
-
+name = sys.argv[3]
 
 df = pd.read_csv(sys.argv[1])
 
@@ -44,4 +45,4 @@ df['total'] = df.sum(axis=1)
 
 print(df)
 
-save_df_as_image(df, "./plots/total_unique_edges.svg")
+save_df_as_image(df, "./plots/" + name)
