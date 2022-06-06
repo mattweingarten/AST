@@ -1,4 +1,4 @@
 {
     "benchmarks": ["vorbis", "libjpeg", "lcms","libxml2","openthread","sqlite3","woff", "bloaty", "aspell","freetype","libpng", "harfbuzz", "curl_curl", "jsoncpp","libcap", "openssl", "openthread", "proj4", "libhtp_fuzz", "stb_stbi", "pdf_fuzzer", "libpcap"],
-    "flags": ["aflplusplus_ast_o0", "aflplusplus_ast_o1","aflplusplus_ast_o2","aflplusplus_ast_o3","aflplusplus_ast_o3_native", "aflplusplus_ast_f0", "aflplusplus_ast_f1", "aflplusplus_ast_opt_disable", "aflplusplus_ast_opt_l1", "aflplusplus_ast_o3_lto", "aflplusplus_ast_o0_lto"]
+    "flags": ["aflplusplus_ast_o0", "aflplusplus_ast_o1","aflplusplus_ast_o2","aflplusplus_ast_o3","aflplusplus_ast_o3_native", "aflplusplus_ast_f0", "aflplusplus_ast_f1", "aflplusplus_ast_opt_disable", "aflplusplus_ast_opt_l1", "aflplusplus_ast_o3_lto", "aflplusplus_ast_o0_lto", "afl_from_input_seed"]
 }
