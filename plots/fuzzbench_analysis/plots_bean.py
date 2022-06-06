@@ -23,6 +23,13 @@ D + 'exp-2022-06-02-18-31-30-bean-all-vorbis-2017-12-11/sancov_out.csv',
 D + 'exp-2022-06-03-16-18-20-bean-all-freetype2-2017/sancov_out.csv',
 D + 'exp-2022-06-03-21-57-58-bean-all-libjpeg-turbo-07-2017/sancov_out.csv',
 
+# Too much, create dedicated plots for this
+# D + '../bean-from_input_seed/sancov_util_results/exp-2022-06-06-00-44-39-freetype2/sancov_out.csv',
+# D + '../bean-from_input_seed/sancov_util_results/exp-2022-06-06-00-44-39-libjpeg/sancov_out.csv',
+# D + '../exp-2022-06-06-00-44-39-vorbis/sancov_out.csv'
+
+
+
 ]
 
 
