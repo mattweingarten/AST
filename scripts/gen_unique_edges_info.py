@@ -22,11 +22,15 @@ COVERED_EDGES = {
 }
 
 def read_sancov(f):
-    print(f)
+    # print(f)
 
     if FOREIGN:
         if "miner" in f :
             f = f.replace("/home/b/bdata-unsync/ast-fuzz/miner/miner-experiment-data/sancov_util_results/", "/mnt/c/Users/Matt/Desktop/ASTtop/AST/var/data/sancov/miner/miner/")
+        if "/home/matt/ASTtop/AST/scripts/sancov_util_results/" in f:
+            f = f.replace("/home/matt/ASTtop/AST/scripts/sancov_util_results/", "/mnt/c/Users/Matt/Desktop/ASTtop/AST/scripts/sancov_util_results/")
+        if("/home/b/bdata-unsync/ast-fuzz/experiment-data/two_stage/sancov_util_results/" in f):
+            f = f.replace("/home/b/bdata-unsync/ast-fuzz/experiment-data/two_stage/sancov_util_results/", "/mnt/c/Users/Matt/Desktop/ASTtop/AST/var/data/sancov/bean/")
         else:
             f = f.replace("/home/b/bdata-unsync/ast-fuzz/experiment-data/o0_coverage/sancov_util_results/","/mnt/c/Users/Matt/Desktop/ASTtop/AST/var/data/sancov/bean/" )
 
@@ -52,23 +56,31 @@ def handle_exp(path):
 
 def handle_results(path):
         bs = [f.path for f in os.scandir(path) if f.is_dir()]
+        
         for b in bs: 
             handle_exp(b) 
 
 
 def handle_trial(df):
-    # print(df.columns.values)
-    # df = df[['corpusNr', 'fuzzer' ,'benchmark','sancov_file']]
-    # print(df)
-    # print(df['corpusNr'])
-    # print(df.query('corpusNr == 17'))
-    df = df.query('corpusNr == 17')
-    # print(COVERED_EDGES)
+
+    # df = df.query('corpusNr == 17')
 
     df = df.reset_index()  # make sure indexes pair with number of rows
     for index, row in df.iterrows():
 
+        print(row['fuzzer'])
         # print(row['fuzzer'], row['benchmark'], row['sancov_file'])
+        # if(row['fuzzer'] == 'afl_from_input_seed'):
+            # print(row)
+            # exit(1)
+        if(row['fuzzer'] != 'afl_from_input_seed' and row['corpusNr'] != 17):
+            continue
+
+        if(row['fuzzer'] == 'afl_from_input_seed' and row['corpusNr'] != 9):
+            print(row)
+            # exit(1)
+            continue
+
         set = read_sancov(row['sancov_file'])
 
         key = (row['fuzzer'], row['benchmark'])
@@ -108,7 +120,7 @@ parser = ArgumentParser()
 # parser.add_argument('--exp_folders',nargs='+', default=["wmatt/experiment-data", "bean/benchmarks/experiment-data"])
 # parser.add_argument('--exp_json_path', default="configs/exp_setup.json")
 parser.add_argument("--sancov_util_results_path", default="./scripts/sancov_util_results")
-parser.add_argument("--foreign", default=False)
+parser.add_argument("--foreign", default=True)
 args = vars( parser.parse_args())
 results_path = args['sancov_util_results_path'
 ]

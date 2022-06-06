@@ -2,6 +2,8 @@ import json
 import os.path
 
 def cut_fuzz_name(name):
+    if(name == "afl_from_input_seed"):
+        return "comb_O2_O3"
     return name[12:]
 
 def isElf(file):

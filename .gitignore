@@ -12,3 +12,4 @@ scripts/handle_single_binary.miner.py
 scripts/generate_binary_info.miner.py
 scripts/__pycache__/
 scripts/generate_binary_info_2022-06-05T21:10:37.483185/
+*.sancov

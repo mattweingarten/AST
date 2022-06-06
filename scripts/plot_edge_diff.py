@@ -43,12 +43,14 @@ for bench in benchmarks:
 
 new_df = pd.DataFrame(columns=df.columns.values, data=normalized)
 
-
+print(new_df.to_string())
 final = []
 for covered in fuzzers:
     df1 = new_df.loc[new_df['covered'] == covered]
     for not_covered in fuzzers:
         df2 = df1.loc[df1['not_covered'] == not_covered]
+        if(covered == 'afl_from_input_seed'):
+            print(df2.to_string())
         final.append([cut_fuzz_name(covered),cut_fuzz_name(not_covered),df2['edges'].mean()])
 
 final_df = pd.DataFrame(columns=['covered','not_covered', 'edges'], data=final)
