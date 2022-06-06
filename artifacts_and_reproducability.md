@@ -30,4 +30,4 @@ which then subsequently can be analyzed and processed with tools:
 
 ### Polybox data
 The ploybox data folder contains the output of several fuzzing compaign, which then susequently were postprocessed with the scripts listed above.
-The reference binary (o0) is available in each experiment folder in ./coverage-binaries/coverage-build-<experiment>.tar.gz.
+The reference binary (o0) is available in each experiment folder in ./coverage-binaries/coverage-build-experiment-name.tar.gz.
