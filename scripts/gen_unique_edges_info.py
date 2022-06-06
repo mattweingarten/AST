@@ -24,6 +24,14 @@ COVERED_EDGES = {
 def read_sancov(f):
     print(f)
 
+    if FOREIGN:
+        if "miner" in f :
+            f = f.replace("/home/b/bdata-unsync/ast-fuzz/miner/miner-experiment-data/sancov_util_results/", "/mnt/c/Users/Matt/Desktop/ASTtop/AST/var/data/sancov/miner/miner/")
+        else:
+            f = f.replace("/home/b/bdata-unsync/ast-fuzz/experiment-data/o0_coverage/sancov_util_results/","/mnt/c/Users/Matt/Desktop/ASTtop/AST/var/data/sancov/bean/" )
+
+    # print(f)
+    # exit(1)
     edges = set()
 
     proc = subprocess.Popen(['sancov', '--print',f],stdout=subprocess.PIPE)
@@ -100,9 +108,11 @@ parser = ArgumentParser()
 # parser.add_argument('--exp_folders',nargs='+', default=["wmatt/experiment-data", "bean/benchmarks/experiment-data"])
 # parser.add_argument('--exp_json_path', default="configs/exp_setup.json")
 parser.add_argument("--sancov_util_results_path", default="./scripts/sancov_util_results")
+parser.add_argument("--foreign", default=False)
 args = vars( parser.parse_args())
 results_path = args['sancov_util_results_path'
 ]
+FOREIGN = args['foreign']
 # bench_json = get_exp_json(args['exp_json_path'])
 # BENCHMARKS, FLAGS = bench_json['benchmarks'], bench_json['flags']
 out = open("out/unique_edges_compare.csv", 'a+')

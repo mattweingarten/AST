@@ -1,6 +1,8 @@
 import json
 import os.path
 
+def cut_fuzz_name(name):
+    return name[12:]
 
 def isElf(file):
     f = open(file,'rb')
