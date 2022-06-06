@@ -7,3 +7,8 @@
 /var/llvm_opt_wrapper/poc/src/main.i
 /var/llvm_opt_wrapper/poc/src/test.bc
 /var/llvm_opt_wrapper/poc/src/test.i
+/scripts/__pycache__/util.cpython-310.pyc
+scripts/handle_single_binary.miner.py
+scripts/generate_binary_info.miner.py
+scripts/__pycache__/
+scripts/generate_binary_info_2022-06-05T21:10:37.483185/

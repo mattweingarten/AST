@@ -30,6 +30,9 @@ bench_json = get_exp_json(sys.argv[2])
 
 
 df = pd.read_csv(sys.argv[1])
+
+df = df.groupby(['fuzzer', 'benchmark'], as_index=False).mean()
+
 df['fuzzer'] = df['fuzzer'].apply(lambda x : cut_fuzz_name(x))
 
 df['benchmark'] = df['benchmark'].apply(lambda x : get_benchmark(x, bench_json['benchmarks']))
