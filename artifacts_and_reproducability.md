@@ -26,3 +26,8 @@ which then subsequently can be analyzed and processed with tools:
 
 - ./scripts/*
 - ./plots/fuzzbench_analysis/plots_all.py
+
+
+### Polybox data
+The ploybox data folder contains the output of several fuzzing compaign, which then susequently were postprocessed with the scripts listed above.
+The reference binary (o0) is available in each experiment folder in ./coverage-binaries/coverage-build-<experiment>.tar.gz.
