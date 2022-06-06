@@ -1,24 +1,18 @@
 benchmarks:
+- vorbis-2017-12-11
+- freetype2-2017
 - libjpeg-turbo-07-2017
+- curl_curl_fuzzer_http
 concurrent_builds: 2
 description: null
 docker_registry: gcr.io/fuzzbench
-experiment: exp-2022-06-03-21-57-58
+experiment: exp-2022-06-06-00-44-39
 experiment_filestore: /home/b/tmp/ast-fuzz/experiment-data
 fuzzers:
-- aflplusplus_ast_o3
-- aflplusplus_ast_o2
-- aflplusplus_ast_o1
-- aflplusplus_ast_o0
-- aflplusplus_ast_f0
-- aflplusplus_ast_f1
-- aflplusplus_ast_opt_disable
-- aflplusplus_ast_o3_native
-- aflplusplus_ast_opt_l1
-- aflplusplus_ast_o3_lto
-git_hash: a9b9b094591378ccf4c24d408ab425985ae82378
+- afl_from_input_seed
+git_hash: c4eff492acf7ef4c19ca6ee405c3c771c06d4667
 local_experiment: true
-max_total_time: 14400
+max_total_time: 7200
 measurers_cpus: null
 no_dictionaries: false
 no_seeds: false

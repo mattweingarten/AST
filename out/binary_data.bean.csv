@@ -89,3 +89,7 @@ vorbis,aflplusplus_ast_f1,10322,18475
 vorbis,aflplusplus_ast_o0,9031,15228
 vorbis,aflplusplus_ast_o3,13060,23534
 vorbis,aflplusplus_ast_o1,10578,18544
+libjpeg,afl_from_input_seed,30439,62843
+vorbis,afl_from_input_seed,12517,21892
+curl_curl,afl_from_input_seed,155343,301948
+freetype,afl_from_input_seed,60764,115473
