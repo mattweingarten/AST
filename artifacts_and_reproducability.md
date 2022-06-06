@@ -32,3 +32,6 @@ in (1):
 ### Polybox data
 The ploybox data folder contains the output of several fuzzing compaign (from laptop 1 and laptop 2) which then susequently were postprocessed with the scripts listed above.
 The reference binary (o0) is available in each experiment folder in ./coverage-binaries/coverage-build-experiment-name.tar.gz.
+The corpus for each trial for every experiment is available under ./experiment-folders/<EXPERIMENT_NAME>/trial-<TRIAL_ID>/corpus/
+
+Where each corpus-archrive-file represents the corpus at 15 minute intervals taken by the experiment.
