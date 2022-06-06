@@ -1,4 +1,4 @@
-### Files
+### Repositories and Code
 
 The following repositories contain code for this project:
 
@@ -12,7 +12,7 @@ The following repositories contain code for this project:
 - https://github.com/mattweingarten/AFLplusplus/tree/stable-ast-modified
   - Modified AFL++ implementation to influence compilation with compiler flags 
     
-### Obtaining fuzzing data
+### Obtaining Fuzzing data
 
 Benchmark data is obtained through several hour long fuzzing process (ca. 20 gb in size)
 See scripts such as ./bean/run_experiment.sh
